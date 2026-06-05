@@ -1,13 +1,23 @@
 .venv/
 .idea/
+.pytest_cache/
 
 __pycache__/
 *.py[cod]
 
 .env
 
+data/runtime/
+data/reports/
+data/_*.json
+data/_*.txt
+data/user_persona.json
+
 data/reports/*.pdf
 data/reports/*.png
 data/reports/*.jpg
+
+*.sqlite3
+*.db
 
 *.log

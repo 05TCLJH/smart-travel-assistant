@@ -1,6 +1,0 @@
-世界之窗	2.0	standard
-华侨城创意文化园	2.0	standard
-南宁方特东盟神画	5.0	half_day
-融创乐园	5.0	half_day
-长隆旅游度假区	5.0	half_day
-香港迪士尼乐园	5.0	half_day

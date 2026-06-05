@@ -1,9 +1,11 @@
 .venv/
 .idea/
+.pytest_cache/
 __pycache__/
 *.py[cod]
 .env
 *.log
+.env.*
 .git/
 .gitignore
 README.md
@@ -15,3 +17,6 @@ data/reports/
 data/_*.json
 data/_*.txt
 data/reports/*.pdf
+data/user_persona.json
+*.sqlite3
+*.db
