@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from backend.planning.poi_retrieval.classifiers import is_usable_raw_poi
@@ -58,12 +59,13 @@ class AmapPoiResearchSupport:
         return self._owner._poi_pipeline.normalize(rows, origin_location, destination, persona, scope, active)
 
     def enrich_search_rows(self, rows: list[Any], destination: str, *, max_rows: int = 18) -> list[dict[str, Any]]:
-        """补充搜索行的坐标、地址和评分字段。"""
+        """补充搜索行的坐标、地址和评分字段（并行化）。"""
         limit = max(6, int(max_rows or 18))
-        enriched: list[dict[str, Any]] = []
-        for row in (rows[:limit] if isinstance(rows, list) else []):
-            if not isinstance(row, dict):
-                continue
+        source_rows = [dict(r) for r in (rows[:limit] if isinstance(rows, list) else []) if isinstance(r, dict)]
+        if not source_rows:
+            return []
+
+        def _enrich_one(row: dict[str, Any]) -> dict[str, Any]:
             current = dict(row)
             poi_id = str(current.get("id", "")).strip()
             existing_loc = str(current.get("location", "")).strip()
@@ -86,7 +88,19 @@ class AmapPoiResearchSupport:
                 "rating": str((current.get("biz_ext") or {}).get("rating") or detail.get("rating") or ""),
                 "cost": str((current.get("biz_ext") or {}).get("cost") or detail.get("cost") or ""),
             }
-            enriched.append(current)
+            return current
+
+        enriched: list[dict[str, Any]] = []
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            futures = {executor.submit(_enrich_one, row): idx for idx, row in enumerate(source_rows)}
+            results: dict[int, dict[str, Any]] = {}
+            for future in as_completed(futures):
+                idx = futures[future]
+                try:
+                    results[idx] = future.result()
+                except Exception:
+                    results[idx] = source_rows[idx]
+            enriched = [results[i] for i in sorted(results)]
         return enriched
 
     def ensure_poi_location(self, poi: dict[str, Any], destination: str = "") -> str:

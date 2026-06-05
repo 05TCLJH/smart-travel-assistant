@@ -36,6 +36,9 @@ class ReportService:
 
     PAGE_MARGIN = 15 * mm
     PAGE_WIDTH = A4[0] - PAGE_MARGIN * 2
+    FONT_FAMILY = "TravelReportCn"
+    FONT_REGULAR = "TravelReportCn-Regular"
+    FONT_BOLD = "TravelReportCn-Bold"
 
     _PLANNER_LABELS: dict[str, str] = {
         "langgraph-react-planner": "多智能体行程规划",
@@ -56,24 +59,77 @@ class ReportService:
         return GeneratedReport(filename=filename, content=buffer.getvalue())
 
     def _register_font(self) -> str:
-        alias = "TravelReportCn"
-        if alias in pdfmetrics.getRegisteredFontNames():
-            return alias
+        family = self.FONT_FAMILY
+        if self.FONT_REGULAR in pdfmetrics.getRegisteredFontNames():
+            pdfmetrics.registerFontFamily(
+                family,
+                normal=self.FONT_REGULAR,
+                bold=self.FONT_BOLD if self.FONT_BOLD in pdfmetrics.getRegisteredFontNames() else self.FONT_REGULAR,
+                italic=self.FONT_REGULAR,
+                boldItalic=self.FONT_BOLD if self.FONT_BOLD in pdfmetrics.getRegisteredFontNames() else self.FONT_REGULAR,
+            )
+            return self.FONT_REGULAR
 
-        candidates = self._font_candidates()
-        for path in candidates:
-            if not path.exists():
-                continue
-            try:
-                pdfmetrics.registerFont(TTFont(alias, str(path)))
-                return alias
-            except Exception:
-                continue
+        regular_path, bold_path = self._resolve_font_paths()
+        if regular_path is not None:
+            pdfmetrics.registerFont(TTFont(self.FONT_REGULAR, str(regular_path)))
+            if bold_path is not None:
+                pdfmetrics.registerFont(TTFont(self.FONT_BOLD, str(bold_path)))
+            else:
+                pdfmetrics.registerFont(TTFont(self.FONT_BOLD, str(regular_path)))
+            pdfmetrics.registerFontFamily(
+                family,
+                normal=self.FONT_REGULAR,
+                bold=self.FONT_BOLD,
+                italic=self.FONT_REGULAR,
+                boldItalic=self.FONT_BOLD,
+            )
+            return self.FONT_REGULAR
 
         fallback = "STSong-Light"
         if fallback not in pdfmetrics.getRegisteredFontNames():
             pdfmetrics.registerFont(UnicodeCIDFont(fallback))
+        pdfmetrics.registerFontFamily(
+            family,
+            normal=fallback,
+            bold=fallback,
+            italic=fallback,
+            boldItalic=fallback,
+        )
         return fallback
+
+    def _resolve_font_paths(self) -> tuple[Path | None, Path | None]:
+        regular_candidates = [
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansCJKsc-Regular.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC-Regular.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "SourceHanSansSC-Regular.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansCJKsc-Regular.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC-Regular.otf",
+            PROJECT_ROOT / "fonts" / "SourceHanSansSC-Regular.otf",
+        ]
+        bold_candidates = [
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansCJKsc-Bold.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC-Bold.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "SourceHanSansSC-Bold.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansCJKsc-Bold.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC-Bold.otf",
+            PROJECT_ROOT / "fonts" / "SourceHanSansSC-Bold.otf",
+        ]
+
+        regular_path = next((path for path in regular_candidates if path.exists()), None)
+        bold_path = next((path for path in bold_candidates if path.exists()), None)
+
+        if regular_path is not None:
+            return regular_path, bold_path
+
+        for path in self._font_candidates():
+            if path.exists():
+                return path, None
+        return None, None
 
     @staticmethod
     def _font_candidates() -> list[Path]:
@@ -85,10 +141,21 @@ class ReportService:
                 config_paths.append(Path(candidate))
 
         bundled_candidates = [
-            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC-Regular.ttf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansCJKsc-Regular.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansCJKsc-Bold.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC-Regular.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "NotoSansSC-Bold.otf",
             PROJECT_ROOT / "assets" / "fonts" / "SourceHanSansSC-Regular.otf",
+            PROJECT_ROOT / "assets" / "fonts" / "SourceHanSansSC-Bold.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC[wght].ttf",
+            PROJECT_ROOT / "fonts" / "NotoSansCJKsc-Regular.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansCJKsc-Bold.otf",
             PROJECT_ROOT / "fonts" / "NotoSansSC-Regular.ttf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC-Regular.otf",
+            PROJECT_ROOT / "fonts" / "NotoSansSC-Bold.otf",
             PROJECT_ROOT / "fonts" / "SourceHanSansSC-Regular.otf",
+            PROJECT_ROOT / "fonts" / "SourceHanSansSC-Bold.otf",
         ]
         system_candidates = [
             Path(r"C:\Windows\Fonts\msyh.ttc"),

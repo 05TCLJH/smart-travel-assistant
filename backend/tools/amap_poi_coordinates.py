@@ -67,11 +67,8 @@ class AmapPoiCoordinateSupport:
             return ""
         if city_hint and city_hint not in text:
             text = f"{city_hint}{text}"
-        try:
-            payload = self._owner.amap.geocode(text)
-            return extract_geocode_location(payload)
-        except Exception:
-            return ""
+        payload = self._owner.resolve_geocode_payload(text)
+        return extract_geocode_location(payload) if payload else ""
 
     @staticmethod
     def should_prefer_address_anchor(name: str, address: str) -> bool:
@@ -135,6 +132,10 @@ class AmapPoiCoordinateSupport:
         """生成并执行景点地理编码查询，返回去重后的候选坐标。"""
         city = str(city or "").strip() or "南昌"
         province = str(province or "").strip()
+        cache_key = f"{self._owner.amap.server_url}|{name}|{address}|{city}|{province}"
+        cached = self._owner._poi_geocode_query_cache.get(cache_key)
+        if cached is not None:
+            return list(cached)
         prefix = province or ""
         queries: list[tuple[str, str]] = []
         if address and name:
@@ -155,6 +156,7 @@ class AmapPoiCoordinateSupport:
                 continue
             seen_loc.add(loc)
             results.append((loc, source))
+        self._owner._poi_geocode_query_cache[cache_key] = list(results)
         return results
 
     def collect_poi_coordinate_candidates(
@@ -197,6 +199,10 @@ class AmapPoiCoordinateSupport:
         target = self._owner._dedupe_name_key(name)
         if not target or not (self._owner.mcp_enabled and self._owner.amap.enabled):
             return []
+        cache_key = f"{self._owner.amap.server_url}|{target}|{city}"
+        cached = self._owner._poi_homonym_search_cache.get(cache_key)
+        if cached is not None:
+            return list(cached)
         try:
             response = self._owner.amap.text_search(f"{city}{name}", city=city, extensions="all", offset=15)
         except Exception:
@@ -217,6 +223,7 @@ class AmapPoiCoordinateSupport:
                 extras.append(_PoiCoordinateCandidate(entr, "homonym_entr"))
             if loc:
                 extras.append(_PoiCoordinateCandidate(loc, "homonym_search"))
+        self._owner._poi_homonym_search_cache[cache_key] = list(extras)
         return extras
 
     @staticmethod
@@ -521,12 +528,43 @@ class AmapPoiCoordinateSupport:
         name = str(row_rec.get("name", "") or detail_rec.get("name", "")).strip()
         address = str(row_rec.get("address", "") or detail_rec.get("address", "")).strip()
         city = str(row_rec.get("cityname") or row_rec.get("city") or detail_rec.get("city") or destination).strip()
+        poi_id = str(row_rec.get("id", "") or detail_rec.get("id", "")).strip()
+        cache_key_payload: dict[str, Any] = {
+            "destination": str(destination or "").strip(),
+            "poi_id": poi_id,
+        }
+        if not poi_id:
+            cache_key_payload["row"] = {
+                "name": name,
+                "address": address,
+                "city": city,
+                "province": str(row_rec.get("pname") or row_rec.get("province") or detail_rec.get("pname") or detail_rec.get("province") or "").strip(),
+                "location": str(row_rec.get("location", "")).strip(),
+                "entr_location": self.coord_string_from_record(row_rec, "entr_location")
+                or self.coord_string_from_record(detail_rec, "entr_location"),
+                "exit_location": self.coord_string_from_record(row_rec, "exit_location")
+                or self.coord_string_from_record(detail_rec, "exit_location"),
+                "type": str(row_rec.get("type", "") or detail_rec.get("type", "")).strip(),
+                "typecode": str(row_rec.get("typecode", "") or detail_rec.get("typecode", "")).strip(),
+            }
+        cache_key = json.dumps(
+            cache_key_payload,
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        cached = self._owner._poi_coordinate_cache.get(cache_key)
+        if cached is not None:
+            return cached
 
         candidates = self._owner._collect_poi_coordinate_candidates(row_rec, detail_rec, name, address, city)
         if candidates:
-            return self._owner._select_best_poi_coordinate(name, address, city, candidates)
+            resolved = self._owner._select_best_poi_coordinate(name, address, city, candidates)
+            self._owner._poi_coordinate_cache[cache_key] = resolved
+            return resolved
 
         osm_loc = self._owner._lookup_osm_coordinate(name, city, address)
         if osm_loc:
+            self._owner._poi_coordinate_cache[cache_key] = osm_loc
             return osm_loc
+        self._owner._poi_coordinate_cache[cache_key] = ""
         return ""

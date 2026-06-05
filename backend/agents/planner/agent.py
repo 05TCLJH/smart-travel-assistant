@@ -94,7 +94,23 @@ def execute_planner_action(state: TripGraphState, runtime) -> dict[str, Any]:
     revision_state = dict(state.get("revision_state", {}) or {})
 
     if action == "expand_candidates":
-        query_hint = str(command.get("query_hint", "")).strip() or _hint_from_persona(persona, state.get("review_feedback", {}))
+        raw_query_hint = str(command.get("query_hint", "")).strip()
+        generic_hints = {
+            "热门景点",
+            "必去景点",
+            "景点",
+            "必去",
+            "城市地标",
+            "经典景点",
+            "经典线路",
+            "推荐",
+            "旅行风格",
+            "默认",
+        }
+        query_hint = raw_query_hint or _hint_from_persona(persona, state.get("review_feedback", {}))
+        if query_hint in generic_hints:
+            planner_hint = str(persona.get("planner_query_hint", "")).strip()
+            query_hint = planner_hint or _hint_from_persona(persona, state.get("review_feedback", {}))
         runtime.emit_progress(
             f"Planner Agent：候选不足，正在扩展检索词“{query_hint or '热门景点'}”...",
             "planner",

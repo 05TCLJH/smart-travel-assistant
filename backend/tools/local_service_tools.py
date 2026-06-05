@@ -7,7 +7,6 @@ import re
 from typing import Any
 
 from backend.planning.budget_style import lodging_fallback_types, lodging_search_keywords, normalize_budget_style
-from backend.tools.amap_geocode import extract_destination_scope, extract_geocode_location
 from backend.tools.amap_tools import TravelResearchTools, safe_float, safe_int
 from backend.tools.grounding_tools import is_auxiliary_poi
 
@@ -258,29 +257,7 @@ class LocalServiceTools:
         return merged
 
     def _resolve_destination_scope(self, destination: str) -> dict[str, Any]:
-        scope: dict[str, Any] = {
-            "destination": destination,
-            "resolved_name": destination,
-            "city_ref": destination,
-            "anchor": None,
-        }
-        if not self.amap.enabled:
-            return scope
-        try:
-            payload = self.amap.geocode(destination)
-        except Exception:
-            return scope
-
-        resolved_scope = extract_destination_scope(payload, destination)
-        location = extract_geocode_location(payload)
-        scope.update(resolved_scope)
-        scope["anchor"] = self.research_tools.parse_lnglat(location)
-        scope["city_ref"] = (
-            str(resolved_scope.get("adcode", "")).strip()
-            or str(resolved_scope.get("city", "")).strip()
-            or destination
-        )
-        return scope
+        return self.research_tools.get_destination_scope(destination)
 
     def _resolve_destination_anchor(self, destination: str) -> tuple[float, float] | None:
         return self._resolve_destination_scope(destination).get("anchor")
@@ -573,7 +550,7 @@ class LocalServiceTools:
             query = " ".join(part for part in query_parts if part)
             if query:
                 try:
-                    payload = self.amap.geocode(query)
+                    payload = self.research_tools.resolve_geocode_payload(query)
                     rows = payload.get("geocodes") or payload.get("results") or []
                     first = rows[0] if rows and isinstance(rows[0], dict) else {}
                     location = str(first.get("location", "")).strip()

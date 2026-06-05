@@ -10,7 +10,7 @@ import time
 from typing import Any
 from urllib import parse
 
-from backend.core.settings import amap_key, env_float, first_env
+from backend.core.settings import amap_key, env_float, env_int, first_env
 from backend.mcp.streamable_http_client import StreamableHttpMcpClient
 
 
@@ -51,7 +51,8 @@ class AmapMcpClient:
     _client_server_url: str = ""
     _tool_names: dict[str, str] = field(default_factory=dict)
     _response_cache: dict[str, tuple[float, float, dict[str, Any]]] = field(default_factory=dict)
-    _call_gate: threading.Lock = field(default_factory=threading.Lock, repr=False)
+    _call_gate: threading.Semaphore = field(default_factory=lambda: threading.Semaphore(env_int("AMAP_MCP_MAX_CONCURRENT_CALLS", 2)), repr=False)
+    _call_gap_lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
     _last_call_mono: float = field(default=0.0, repr=False)
 
     @property
@@ -162,7 +163,7 @@ class AmapMcpClient:
             if now - ts <= ttl:
                 return deepcopy(body)
 
-        min_gap = env_float("AMAP_MCP_MIN_INTERVAL_SECONDS", 0.35)
+        min_gap = env_float("AMAP_MCP_MIN_INTERVAL_SECONDS", 0.08)
         retry_sleep = env_float("AMAP_MCP_QUOTA_RETRY_SECONDS", 2.8)
         weather_ttl = env_float("AMAP_MCP_WEATHER_CACHE_SECONDS", 900.0)
         default_ttl = env_float("AMAP_MCP_DEFAULT_CACHE_SECONDS", 300.0)
@@ -176,10 +177,13 @@ class AmapMcpClient:
                     raise RuntimeError(text)
             return payload
 
-        with self._call_gate:
+        with self._call_gap_lock:
             wait = min_gap - (time.monotonic() - self._last_call_mono)
             if wait > 0:
                 time.sleep(wait)
+            self._last_call_mono = time.monotonic()
+
+        with self._call_gate:
             try:
                 payload = invoke_once()
             except RuntimeError as exc:
@@ -187,9 +191,7 @@ class AmapMcpClient:
                     time.sleep(retry_sleep)
                     payload = invoke_once()
                 else:
-                    self._last_call_mono = time.monotonic()
                     raise
-            self._last_call_mono = time.monotonic()
 
         if isinstance(payload, dict):
             store_ts = time.monotonic()

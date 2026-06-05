@@ -8,6 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
+from backend.agents.mcp_prompts import build_prompt_messages
 from backend.core.runtime_owner import read_runtime_owner
 from backend.core.settings import travel_context_mcp_enabled, travel_context_mcp_token
 from backend.mcp.streamable_http_client import MCP_PROTOCOL_VERSION
@@ -29,48 +30,34 @@ def _resource_text(uri: str, contents: Any) -> list[dict[str, Any]]:
     return [{"uri": uri, "mimeType": "application/json", "text": json.dumps(contents, ensure_ascii=False, indent=2)}]
 
 
+def _base_prompt_context(owner_id: str, session_id: str) -> dict[str, Any]:
+    snapshot = travel_context_store.snapshot(owner_id, session_id) if session_id else {}
+    return {
+        "session_id": session_id,
+        "trip_request": snapshot.get("trip_request", {}),
+        "persona": snapshot.get("persona", {}),
+        "weather": snapshot.get("weather", {}),
+        "map_data": snapshot.get("map_data", {}),
+        "research_brief": snapshot.get("research_brief", {}),
+        "candidate_pois": snapshot.get("candidate_pois", []),
+        "candidate_guard": snapshot.get("candidate_guard", {}),
+        "plan": snapshot.get("plan", {}),
+        "transport_plan": snapshot.get("transport_plan", {}),
+        "lodging_recommendations": snapshot.get("lodging_recommendations", []),
+        "food_recommendations": snapshot.get("food_recommendations", []),
+        "review_feedback": snapshot.get("review_feedback", {}),
+    }
+
+
 def _prompt_messages(owner_id: str, name: str, arguments: dict[str, Any]) -> list[dict[str, Any]]:
     session_id = str(arguments.get("session_id", "")).strip()
-    snapshot = travel_context_store.snapshot(owner_id, session_id) if session_id else {}
-    if name == "plan-travel-itinerary":
-        return [
-            {
-                "role": "user",
-                "content": {
-                    "type": "text",
-                    "text": json.dumps(
-                        {
-                            "instruction": "请只基于当前资源中的候选 POI 和用户画像生成旅行行程，不得虚构新地点。",
-                            "session_id": session_id,
-                            "trip_request": snapshot.get("trip_request", {}),
-                            "persona": snapshot.get("persona", {}),
-                            "candidate_pois": snapshot.get("candidate_pois", []),
-                        },
-                        ensure_ascii=False,
-                    ),
-                },
-            }
-        ]
-    if name == "audit-grounding":
-        return [
-            {
-                "role": "user",
-                "content": {
-                    "type": "text",
-                    "text": json.dumps(
-                        {
-                            "instruction": "检查当前行程是否只使用已 grounding 的 POI，并评估与用户偏好的贴合度。",
-                            "session_id": session_id,
-                            "plan": snapshot.get("plan", {}),
-                            "review_feedback": snapshot.get("review_feedback", {}),
-                            "candidate_guard": snapshot.get("candidate_guard", {}),
-                        },
-                        ensure_ascii=False,
-                    ),
-                },
-            }
-        ]
-    return []
+    context = _base_prompt_context(owner_id, session_id)
+    messages = build_prompt_messages(name, context)
+    for message in messages:
+        content = message.get("content")
+        if isinstance(content, dict) and content.get("type") == "text" and isinstance(content.get("text"), dict):
+            content["text"] = json.dumps(content["text"], ensure_ascii=False)
+    return messages
 
 
 def _authorize(request: Request, payload_id: Any) -> tuple[str, JSONResponse | None]:
@@ -186,12 +173,12 @@ async def travel_context_mcp(request: Request) -> JSONResponse:
                 "prompts": [
                     {
                         "name": "plan-travel-itinerary",
-                        "description": "Generate an itinerary from grounded candidate POIs only.",
+                        "description": "Generate a grounded itinerary and keep each section tied to the user's actual data and the current plan.",
                         "arguments": [{"name": "session_id", "required": True}],
                     },
                     {
                         "name": "audit-grounding",
-                        "description": "Audit grounded POI usage and preference alignment.",
+                        "description": "Audit grounded POI usage and verify each section is tied to the current user context and generated plan.",
                         "arguments": [{"name": "session_id", "required": True}],
                     },
                 ]

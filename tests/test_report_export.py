@@ -41,6 +41,7 @@ def test_report_service_generates_pdf_in_memory() -> None:
     assert report.filename.endswith(".pdf")
     assert report.content.startswith(b"%PDF")
     assert len(report.content) > 100
+    assert b"NotoSansSC" in report.content or b"STSong-Light" in report.content
 
 
 def test_report_export_endpoint_returns_pdf_attachment() -> None:

@@ -80,7 +80,7 @@ class AmapMapDataSupport:
         try:
             _emit("research.geocode", "running", f"地理编码：{destination}")
             geocode_query = resolve_geocode_query(destination)
-            geo = self._owner.amap.geocode(geocode_query)
+            geo = self._owner.resolve_geocode_payload(geocode_query)
             location = self._owner._extract_geocode_location(geo)
             if not location:
                 raise RuntimeError("高德 MCP geocode 未返回坐标")

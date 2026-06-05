@@ -1,12 +1,14 @@
-﻿"""基于高德官方服务的数据采集与地图天气工具。"""
+"""基于高德官方服务的数据采集与地图天气工具。"""
 
 from __future__ import annotations
 
+from copy import deepcopy
 from datetime import date, timedelta
 from collections.abc import Callable
+import threading
 from typing import Any
 
-from backend.core.settings import env_bool
+from backend.core.settings import amap_key, env_bool, env_float, first_env
 from backend.planning.poi_retrieval import PoiRetrievalPipeline
 from backend.planning.poi_retrieval.classifiers import (
     dedupe_name_key,
@@ -42,6 +44,7 @@ from backend.tools.amap_static_map import AmapStaticMapSupport
 from backend.tools.amap_weather import (
     extract_forecast_reporttime,
     fallback_weather_payload,
+    format_weather_failure_reason,
     normalize_weather_payload,
     weather_rain_prob,
 )
@@ -60,11 +63,18 @@ class TravelResearchTools:
 
     def __init__(self) -> None:
         self.amap = AmapMcpClient()
-        self.mcp_enabled = env_bool("AMAP_MCP_ENABLED", True)
+        self._mcp_enabled_configured = env_bool("AMAP_MCP_ENABLED", True)
+        self._mcp_enabled_override: bool | None = None
         self.osm_geocode_enabled = env_bool("OSM_GEOCODE_ENABLED", True)
         self._regeocode_cache: dict[str, dict[str, Any]] = {}
         self._osm_cache: dict[str, str] = {}
         self._map_data_cache: dict[str, tuple[float, dict[str, Any]]] = {}
+        self._geocode_payload_cache: dict[str, dict[str, Any]] = {}
+        self._destination_scope_cache: dict[str, dict[str, Any]] = {}
+        self._poi_coordinate_cache: dict[str, str] = {}
+        self._poi_geocode_query_cache: dict[str, list[tuple[str, str]]] = {}
+        self._poi_homonym_search_cache: dict[str, list[_PoiCoordinateCandidate]] = {}
+        self._cache_lock = threading.Lock()
         self._poi_coordinate_support = AmapPoiCoordinateSupport(self)
         self._map_data_support = AmapMapDataSupport(self)
         self._poi_research_support = AmapPoiResearchSupport(self)
@@ -80,6 +90,84 @@ class TravelResearchTools:
         self._regeocode_cache.clear()
         self._osm_cache.clear()
         self._map_data_cache.clear()
+        self._geocode_payload_cache.clear()
+        self._destination_scope_cache.clear()
+        self._poi_coordinate_cache.clear()
+        self._poi_geocode_query_cache.clear()
+        self._poi_homonym_search_cache.clear()
+
+    def resolve_geocode_payload(self, query: str) -> dict[str, Any]:
+        """缓存高德地理编码结果，供多个板块共享（线程安全）。"""
+        text = str(query or "").strip()
+        if not text or not (self.mcp_enabled and self.amap.enabled):
+            return {}
+        cache_key = f"{self.amap.server_url}|{text}"
+        # 使用锁保护缓存检查 + 写入，避免并行执行时重复调用
+        with self._cache_lock:
+            cached = self._geocode_payload_cache.get(cache_key)
+            if cached is not None:
+                return deepcopy(cached)
+            try:
+                payload = self.amap.geocode(text)
+            except Exception:
+                payload = {}
+            if isinstance(payload, dict):
+                self._geocode_payload_cache[cache_key] = deepcopy(payload)
+                return deepcopy(payload)
+            self._geocode_payload_cache[cache_key] = {}
+        return {}
+
+    def get_destination_scope(self, destination: str) -> dict[str, Any]:
+        """缓存目的地作用域解析结果，避免同一请求多次地理编码。"""
+        text = str(destination or "").strip()
+        scope: dict[str, Any] = {
+            "destination": text,
+            "resolved_name": text,
+            "city_ref": text,
+            "anchor": None,
+        }
+        if not text:
+            return scope
+
+        cache_key = f"{self.amap.server_url}|{text}"
+        cached = self._destination_scope_cache.get(cache_key)
+        if cached is not None:
+            return deepcopy(cached)
+
+        if not self.amap.enabled:
+            self._destination_scope_cache[cache_key] = deepcopy(scope)
+            return deepcopy(scope)
+
+        payload = self.resolve_geocode_payload(text)
+        if payload:
+            resolved_scope = extract_destination_scope(payload, text)
+            location = self._extract_geocode_location(payload)
+            scope.update(resolved_scope)
+            scope["anchor"] = self.parse_lnglat(location)
+            scope["city_ref"] = (
+                str(resolved_scope.get("adcode", "")).strip()
+                or str(resolved_scope.get("city", "")).strip()
+                or text
+            )
+
+        self._destination_scope_cache[cache_key] = deepcopy(scope)
+        return deepcopy(scope)
+
+    @property
+    def mcp_enabled(self) -> bool:
+        """是否允许走高德实时链路。
+
+        兼容两种场景：
+        - 平台级显式启用 AMAP_MCP_ENABLED
+        - 当前请求链路临时注入了可用的高德 Key
+        """
+        if self._mcp_enabled_override is not None:
+            return self._mcp_enabled_override
+        return self._mcp_enabled_configured or bool(first_env("AMAP_MCP_SERVER_URL") or amap_key())
+
+    @mcp_enabled.setter
+    def mcp_enabled(self, value: bool) -> None:
+        self._mcp_enabled_override = bool(value)
 
     @staticmethod
     def build_dates(start_date: str, days: int) -> list[str]:
@@ -96,13 +184,17 @@ class TravelResearchTools:
 
     def build_weather(self, destination: str, dates: list[str]) -> dict[str, Any]:
         if not (self.mcp_enabled and self.amap.enabled):
-            return self._fallback_weather(destination, dates, "当前为体验模式或未配置高德 MCP")
+            return self._fallback_weather(
+                destination,
+                dates,
+                format_weather_failure_reason("当前会话未注入可用高德 Key，天气回退到本地估算。"),
+            )
 
         resolved_name = destination
         geo: dict[str, Any] = {}
         weather_targets: list[str] = []
         try:
-            geo_payload = self.amap.geocode(resolve_geocode_query(destination))
+            geo_payload = self.resolve_geocode_payload(resolve_geocode_query(destination))
             resolved_name = self._extract_geocode_name(geo_payload, destination)
             location = self._extract_geocode_location(geo_payload)
             if location:
@@ -133,11 +225,19 @@ class TravelResearchTools:
                 last_error = str(exc)
 
         if weather_payload is None:
-            return self._fallback_weather(destination, dates, last_error or "高德 MCP 天气服务不可用")
+            return self._fallback_weather(
+                destination,
+                dates,
+                format_weather_failure_reason(last_error or "高德 MCP 天气服务不可用"),
+            )
 
         daily_rows = self._normalize_weather_payload(destination, dates, weather_payload)
         if not daily_rows:
-            return self._fallback_weather(destination, dates, "高德 MCP 天气返回为空")
+            return self._fallback_weather(
+                destination,
+                dates,
+                format_weather_failure_reason(last_error or "高德 MCP 天气返回为空"),
+            )
         scored = [row for row in daily_rows if not row.get("is_pending")]
         avg_rain = sum((row.get("rain_prob") or 0.0) for row in scored) / len(scored) if scored else 0.4
         rating = "优秀" if avg_rain < 0.25 else "良好" if avg_rain < 0.45 else "一般" if avg_rain < 0.65 else "较差"

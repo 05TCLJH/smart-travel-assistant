@@ -58,7 +58,13 @@ class PoiRetrievalPipeline:
         scope: dict[str, Any],
         queries: list[str],
         policy: PoiRetrievalPolicy,
+        emit_step: Callable[[str, str, str | None], None] | None = None,
     ) -> list[dict[str, Any]]:
+        def _emit(step_id: str, status: str, detail: str | None = None) -> None:
+            if emit_step is not None:
+                emit_step(step_id, status, detail)
+
+        _emit("research.poi_collect", "running", "收集并排序原始候选…")
         diversified = collect_candidate_rows(
             self._tools.amap,
             destination,
@@ -67,6 +73,8 @@ class PoiRetrievalPipeline:
             policy,
             priority_score_fn=lambda poi: destination_priority_score(policy, poi),
         )
+        _emit("research.poi_collect", "done", f"原始候选 {len(diversified)} 条")
+        _emit("research.poi_seed_cover", "running", "补充知识库种子覆盖…")
         diversified = ensure_catalog_seed_rows(
             diversified,
             self._tools.amap,
@@ -74,14 +82,20 @@ class PoiRetrievalPipeline:
             scope,
             policy,
         )
+        _emit("research.poi_seed_cover", "done", f"覆盖后候选 {len(diversified)} 条")
         planning_profile = resolve_planning_profile(
             persona,
             is_wide_area=policy.is_wide_area,
             seed_count=len(policy.seed_name_set()),
         )
         enrich_limit = planning_profile.enrichment_limit
+        _emit("research.poi_enrich_select", "running", f"筛选 {enrich_limit} 条用于坐标与详情补全…")
         selected = select_rows_for_enrichment(diversified, policy, max_total=enrich_limit)
-        return self._tools._enrich_search_rows(selected, destination, max_rows=enrich_limit)
+        _emit("research.poi_enrich_select", "done", f"选出 {len(selected)} 条补全候选")
+        _emit("research.poi_enrich", "running", "补全坐标、地址与评分字段…")
+        enriched = self._tools._enrich_search_rows(selected, destination, max_rows=enrich_limit)
+        _emit("research.poi_enrich", "done", f"补全后 {len(enriched)} 条")
+        return enriched
 
     def normalize(
         self,
@@ -111,8 +125,10 @@ class PoiRetrievalPipeline:
                 emit_step(step_id, status, detail)
 
         _emit("research.poi_search", "running", f"按策略检索 {destination} 候选景点…")
+        _emit("research.poi_query_build", "running", "生成检索词…")
         queries, policy = self.build_queries(destination, persona, query_hint, scope, strategy)
-        rows = self.collect_rows(destination, persona, scope, queries, policy)
+        _emit("research.poi_query_build", "done", f"生成 {len(queries)} 个检索词")
+        rows = self.collect_rows(destination, persona, scope, queries, policy, emit_step=emit_step)
         _emit("research.poi_search", "done", f"检索完成，原始候选 {len(rows)} 条")
         if policy.is_wide_area:
             _emit("research.poi_cluster", "running", "合并同一景区多个高德 POI（入口/停车场/子景点）…")

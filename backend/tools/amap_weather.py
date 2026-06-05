@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from backend.tools.amap_common import safe_float
+from backend.core.api_key_specs import classify_service_failure
+from backend.tools.amap_common import amap_failure_followup_hint, safe_float
 
 
 def weather_rain_prob(condition: str) -> float | None:
@@ -70,6 +71,18 @@ def fallback_weather_payload(destination: str, dates: list[str], reason: str) ->
         "is_fallback": True,
         "warning": reason,
     }
+
+
+def format_weather_failure_reason(reason: str) -> str:
+    """把天气失败原因转成前端可读提示。"""
+    text = str(reason or "").strip()
+    if not text:
+        return "天气服务暂不可用，建议临行前再次复核。"
+    info = classify_service_failure(text, hint="amap weather")
+    if info.get("code") != "unknown":
+        tail = amap_failure_followup_hint(text)
+        return f"{info['title']}：{info['message']}{tail}".strip()
+    return f"{text}{amap_failure_followup_hint(text)}".strip()
 
 
 def normalize_weather_payload(destination: str, dates: list[str], payload: dict[str, Any]) -> list[dict[str, Any]]:
