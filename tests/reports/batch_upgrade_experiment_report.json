@@ -1,0 +1,142 @@
+{
+  "cases": [
+    {
+      "name": "qingdao_cultural_3d",
+      "trip_request": {
+        "destination": "青岛",
+        "start_date": "2026-06-01",
+        "days": 3,
+        "budget": 3500
+      },
+      "persona": {
+        "travel_style": "文化历史",
+        "stamina": "适中",
+        "transport_preference": "地铁/公交优先"
+      },
+      "baseline": {
+        "mode": "baseline",
+        "elapsed_s": 68.1154,
+        "poi_search_s": 62.2592,
+        "text_search_calls": 21,
+        "candidate_count": 9,
+        "planning_attempts": 0,
+        "issues": [],
+        "day_routes": [
+          [
+            "青岛啤酒博物馆"
+          ],
+          [
+            "中国人民解放军海军博物馆"
+          ],
+          [
+            "康有为故居纪念馆",
+            "青岛市革命烈士纪念馆"
+          ]
+        ]
+      },
+      "experimental": {
+        "mode": "experimental",
+        "elapsed_s": 117.3442,
+        "poi_search_s": 111.823,
+        "text_search_calls": 36,
+        "candidate_count": 14,
+        "planning_attempts": 0,
+        "issues": [
+          "Day 1 活动负荷偏高，超出当前体力节奏"
+        ],
+        "day_routes": [
+          [
+            "青岛啤酒博物馆",
+            "青岛湛山寺"
+          ],
+          [
+            "中国人民解放军海军博物馆"
+          ],
+          [
+            "康有为故居纪念馆",
+            "奥林匹克帆船中心·奥帆海洋文化旅游区"
+          ]
+        ]
+      },
+      "improvement": {
+        "elapsed_delta_s": -49.2288,
+        "poi_search_delta_s": -49.5638,
+        "text_search_call_delta": -15
+      }
+    },
+    {
+      "name": "beijing_classic_4d",
+      "trip_request": {
+        "destination": "北京",
+        "start_date": "2026-06-08",
+        "days": 4,
+        "budget": 5200
+      },
+      "persona": {
+        "travel_style": "经典热门",
+        "stamina": "适中",
+        "transport_preference": "地铁/公交优先"
+      },
+      "baseline": {
+        "mode": "baseline",
+        "elapsed_s": 78.4168,
+        "poi_search_s": 73.9549,
+        "text_search_calls": 24,
+        "candidate_count": 9,
+        "planning_attempts": 0,
+        "issues": [
+          "Day 1 活动负荷偏高，超出当前体力节奏"
+        ],
+        "day_routes": [
+          [
+            "颐和园",
+            "故宫博物院"
+          ],
+          [
+            "南锣鼓巷",
+            "天安门广场",
+            "圆明园遗址公园"
+          ],
+          [
+            "景山公园",
+            "天坛公园"
+          ],
+          [
+            "国家博物馆"
+          ]
+        ]
+      },
+      "experimental": {
+        "mode": "experimental",
+        "elapsed_s": 86.1181,
+        "poi_search_s": 81.5263,
+        "text_search_calls": 24,
+        "candidate_count": 9,
+        "planning_attempts": 0,
+        "issues": [],
+        "day_routes": [
+          [
+            "故宫博物院"
+          ],
+          [
+            "景山公园",
+            "地坛公园"
+          ],
+          [
+            "天坛公园",
+            "颐和园"
+          ],
+          [
+            "圆明园遗址公园",
+            "香山公园"
+          ]
+        ]
+      },
+      "improvement": {
+        "elapsed_delta_s": -7.7013,
+        "poi_search_delta_s": -7.5714,
+        "text_search_call_delta": 0
+      }
+    }
+  ]
+}

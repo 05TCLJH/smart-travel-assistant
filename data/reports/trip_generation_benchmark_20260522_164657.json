@@ -1,0 +1,2038 @@
+{
+  "generated_at": "2026-05-22T16:44:27",
+  "repeat": 2,
+  "cases": [
+    {
+      "name": "qingdao_cultural_3d",
+      "trip_request": {
+        "destination": "青岛",
+        "start_date": "2026-06-01",
+        "days": 3,
+        "budget": 3500
+      },
+      "persona": {
+        "travel_style": "文化历史",
+        "stamina": "适中",
+        "transport_preference": "地铁/公交优先"
+      },
+      "runs": [
+        {
+          "run_label": "cold",
+          "success": true,
+          "error": "",
+          "elapsed_s": 65.8293,
+          "result_summary": {
+            "planning_attempts": 0,
+            "candidate_count": 9,
+            "map_poi_count": 9,
+            "issues": [],
+            "day_route_counts": [
+              1,
+              1,
+              2
+            ],
+            "day_route_points": [
+              [
+                "青岛啤酒博物馆"
+              ],
+              [
+                "中国人民解放军海军博物馆"
+              ],
+              [
+                "康有为故居纪念馆",
+                "青岛市革命烈士纪念馆"
+              ]
+            ],
+            "estimated_total_cost": 1390.0
+          },
+          "step_summary": {
+            "by_step": {
+              "research.poi_search": {
+                "label": "检索候选景点",
+                "count": 1,
+                "total_duration_s": 60.1485,
+                "avg_duration_s": 60.1485,
+                "max_duration_s": 60.1485,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "food.search": {
+                "label": "检索特色美食",
+                "count": 1,
+                "total_duration_s": 3.8559,
+                "avg_duration_s": 3.8559,
+                "max_duration_s": 3.8559,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.geocode": {
+                "label": "地理编码",
+                "count": 1,
+                "total_duration_s": 1.6569,
+                "avg_duration_s": 1.6569,
+                "max_duration_s": 1.6569,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.weather": {
+                "label": "获取天气",
+                "count": 1,
+                "total_duration_s": 1.1653,
+                "avg_duration_s": 1.1653,
+                "max_duration_s": 1.1653,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "transport.plan": {
+                "label": "住行建议",
+                "count": 1,
+                "total_duration_s": 0.6561,
+                "avg_duration_s": 0.6561,
+                "max_duration_s": 0.6561,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.cluster_layout": {
+                "label": "按负荷装箱排期",
+                "count": 1,
+                "total_duration_s": 0.2276,
+                "avg_duration_s": 0.2276,
+                "max_duration_s": 0.2276,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.finalize": {
+                "label": "生成行程草案",
+                "count": 1,
+                "total_duration_s": 0.2276,
+                "avg_duration_s": 0.2276,
+                "max_duration_s": 0.2276,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_normalize": {
+                "label": "归一化与过滤",
+                "count": 1,
+                "total_duration_s": 0.1333,
+                "avg_duration_s": 0.1333,
+                "max_duration_s": 0.1333,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_guard": {
+                "label": "候选合规检查",
+                "count": 1,
+                "total_duration_s": 0.0244,
+                "avg_duration_s": 0.0244,
+                "max_duration_s": 0.0244,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "intent.parse": {
+                "label": "解析出行需求",
+                "count": 1,
+                "total_duration_s": 0.0035,
+                "avg_duration_s": 0.0035,
+                "max_duration_s": 0.0035,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "budget.review": {
+                "label": "预算审阅",
+                "count": 1,
+                "total_duration_s": 0.0004,
+                "avg_duration_s": 0.0004,
+                "max_duration_s": 0.0004,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.think": {
+                "label": "规划推理",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.review": {
+                "label": "总审阅",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.finalize": {
+                "label": "整理输出",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              }
+            },
+            "by_stage": {
+              "intent": {
+                "step_count": 1,
+                "total_duration_s": 0.0035,
+                "span_duration_s": 0.0036,
+                "top_steps": [
+                  {
+                    "step_id": "intent.parse",
+                    "label": "解析出行需求",
+                    "duration_s": 0.0035
+                  }
+                ]
+              },
+              "research": {
+                "step_count": 5,
+                "total_duration_s": 63.1284,
+                "span_duration_s": 62.0133,
+                "top_steps": [
+                  {
+                    "step_id": "research.poi_search",
+                    "label": "检索候选景点",
+                    "duration_s": 60.1485
+                  },
+                  {
+                    "step_id": "research.geocode",
+                    "label": "地理编码",
+                    "duration_s": 1.6569
+                  },
+                  {
+                    "step_id": "research.weather",
+                    "label": "获取天气",
+                    "duration_s": 1.1653
+                  },
+                  {
+                    "step_id": "research.poi_normalize",
+                    "label": "归一化与过滤",
+                    "duration_s": 0.1333
+                  },
+                  {
+                    "step_id": "research.poi_guard",
+                    "label": "候选合规检查",
+                    "duration_s": 0.0244
+                  }
+                ]
+              },
+              "food": {
+                "step_count": 1,
+                "total_duration_s": 3.8559,
+                "span_duration_s": 3.8558,
+                "top_steps": [
+                  {
+                    "step_id": "food.search",
+                    "label": "检索特色美食",
+                    "duration_s": 3.8559
+                  }
+                ]
+              },
+              "planner": {
+                "step_count": 3,
+                "total_duration_s": 0.4552,
+                "span_duration_s": 0.2282,
+                "top_steps": [
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.2276
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.2276
+                  },
+                  {
+                    "step_id": "planner.think",
+                    "label": "规划推理",
+                    "duration_s": 0.0
+                  }
+                ]
+              },
+              "transport": {
+                "step_count": 1,
+                "total_duration_s": 0.6561,
+                "span_duration_s": 0.6561,
+                "top_steps": [
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.6561
+                  }
+                ]
+              },
+              "budget": {
+                "step_count": 1,
+                "total_duration_s": 0.0004,
+                "span_duration_s": 0.0005,
+                "top_steps": [
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0004
+                  }
+                ]
+              },
+              "supervisor": {
+                "step_count": 2,
+                "total_duration_s": 0.0,
+                "span_duration_s": 0.0011,
+                "top_steps": [
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.finalize",
+                    "label": "整理输出",
+                    "duration_s": 0.0
+                  }
+                ]
+              }
+            }
+          },
+          "segments": [
+            {
+              "step_id": "intent.parse",
+              "stage": "intent",
+              "label": "解析出行需求",
+              "status": "done",
+              "start_offset_s": 0.335,
+              "end_offset_s": 0.3386,
+              "duration_s": 0.0035,
+              "message": "已解析 青岛 3 天 / 预算 3500"
+            },
+            {
+              "step_id": "research.weather",
+              "stage": "research",
+              "label": "获取天气",
+              "status": "done",
+              "start_offset_s": 2.9147,
+              "end_offset_s": 4.08,
+              "duration_s": 1.1653,
+              "message": "天气评级：良好"
+            },
+            {
+              "step_id": "research.geocode",
+              "stage": "research",
+              "label": "地理编码",
+              "status": "done",
+              "start_offset_s": 2.9629,
+              "end_offset_s": 4.6198,
+              "duration_s": 1.6569,
+              "message": "已定位：山东省青岛市"
+            },
+            {
+              "step_id": "food.search",
+              "stage": "food",
+              "label": "检索特色美食",
+              "status": "done",
+              "start_offset_s": 2.9156,
+              "end_offset_s": 6.7714,
+              "duration_s": 3.8559,
+              "message": "已找到 6 条当地美食，优先保留 等俺船靠岸·老船蒸鲜·渔家菜(全球创始店) 等代表性餐饮"
+            },
+            {
+              "step_id": "research.poi_search",
+              "stage": "research",
+              "label": "检索候选景点",
+              "status": "done",
+              "start_offset_s": 4.6199,
+              "end_offset_s": 64.7684,
+              "duration_s": 60.1485,
+              "message": "检索完成，原始候选 12 条"
+            },
+            {
+              "step_id": "research.poi_normalize",
+              "stage": "research",
+              "label": "归一化与过滤",
+              "status": "done",
+              "start_offset_s": 64.7684,
+              "end_offset_s": 64.9018,
+              "duration_s": 0.1333,
+              "message": "过滤后 12 条候选"
+            },
+            {
+              "step_id": "research.poi_guard",
+              "stage": "research",
+              "label": "候选合规检查",
+              "status": "done",
+              "start_offset_s": 64.9036,
+              "end_offset_s": 64.928,
+              "duration_s": 0.0244,
+              "message": "合规候选 9 个"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 64.932,
+              "end_offset_s": 64.932,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 64.9327,
+              "end_offset_s": 65.1602,
+              "duration_s": 0.2276,
+              "message": "按活动负荷装箱：全程 4 个景区簇；每日负荷 D1 72/100；D2 72/100；D3 104/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 64.9326,
+              "end_offset_s": 65.1602,
+              "duration_s": 0.2276,
+              "message": "行程草案已生成（3 天 / 预计 ￥1390）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 65.1623,
+              "end_offset_s": 65.8184,
+              "duration_s": 0.6561,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 65.8196,
+              "end_offset_s": 65.8201,
+              "duration_s": 0.0004,
+              "message": "方案满足当前用户约束。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 65.8237,
+              "end_offset_s": 65.8237,
+              "duration_s": 0.0,
+              "message": "方案通过审查，准备整理最终输出"
+            },
+            {
+              "step_id": "supervisor.finalize",
+              "stage": "supervisor",
+              "label": "整理输出",
+              "status": "done",
+              "start_offset_s": 65.8247,
+              "end_offset_s": 65.8248,
+              "duration_s": 0.0,
+              "message": "最终结果已整理完成，输出 3 天行程"
+            }
+          ],
+          "event_count": 31
+        },
+        {
+          "run_label": "warm_1",
+          "success": true,
+          "error": "",
+          "elapsed_s": 2.6816,
+          "result_summary": {
+            "planning_attempts": 0,
+            "candidate_count": 9,
+            "map_poi_count": 9,
+            "issues": [],
+            "day_route_counts": [
+              1,
+              1,
+              2
+            ],
+            "day_route_points": [
+              [
+                "青岛啤酒博物馆"
+              ],
+              [
+                "中国人民解放军海军博物馆"
+              ],
+              [
+                "康有为故居纪念馆",
+                "青岛市革命烈士纪念馆"
+              ]
+            ],
+            "estimated_total_cost": 1390.0
+          },
+          "step_summary": {
+            "by_step": {
+              "planner.cluster_layout": {
+                "label": "按负荷装箱排期",
+                "count": 1,
+                "total_duration_s": 0.2097,
+                "avg_duration_s": 0.2097,
+                "max_duration_s": 0.2097,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.finalize": {
+                "label": "生成行程草案",
+                "count": 1,
+                "total_duration_s": 0.2097,
+                "avg_duration_s": 0.2097,
+                "max_duration_s": 0.2097,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_guard": {
+                "label": "候选合规检查",
+                "count": 1,
+                "total_duration_s": 0.0243,
+                "avg_duration_s": 0.0243,
+                "max_duration_s": 0.0243,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.weather": {
+                "label": "获取天气",
+                "count": 1,
+                "total_duration_s": 0.0029,
+                "avg_duration_s": 0.0029,
+                "max_duration_s": 0.0029,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "intent.parse": {
+                "label": "解析出行需求",
+                "count": 1,
+                "total_duration_s": 0.001,
+                "avg_duration_s": 0.001,
+                "max_duration_s": 0.001,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "food.search": {
+                "label": "检索特色美食",
+                "count": 1,
+                "total_duration_s": 0.0004,
+                "avg_duration_s": 0.0004,
+                "max_duration_s": 0.0004,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "transport.plan": {
+                "label": "住行建议",
+                "count": 1,
+                "total_duration_s": 0.0003,
+                "avg_duration_s": 0.0003,
+                "max_duration_s": 0.0003,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "budget.review": {
+                "label": "预算审阅",
+                "count": 1,
+                "total_duration_s": 0.0001,
+                "avg_duration_s": 0.0001,
+                "max_duration_s": 0.0001,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.think": {
+                "label": "规划推理",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.review": {
+                "label": "总审阅",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.finalize": {
+                "label": "整理输出",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              }
+            },
+            "by_stage": {
+              "intent": {
+                "step_count": 1,
+                "total_duration_s": 0.001,
+                "span_duration_s": 0.0009,
+                "top_steps": [
+                  {
+                    "step_id": "intent.parse",
+                    "label": "解析出行需求",
+                    "duration_s": 0.001
+                  }
+                ]
+              },
+              "food": {
+                "step_count": 1,
+                "total_duration_s": 0.0004,
+                "span_duration_s": 0.0004,
+                "top_steps": [
+                  {
+                    "step_id": "food.search",
+                    "label": "检索特色美食",
+                    "duration_s": 0.0004
+                  }
+                ]
+              },
+              "research": {
+                "step_count": 2,
+                "total_duration_s": 0.0272,
+                "span_duration_s": 0.0284,
+                "top_steps": [
+                  {
+                    "step_id": "research.poi_guard",
+                    "label": "候选合规检查",
+                    "duration_s": 0.0243
+                  },
+                  {
+                    "step_id": "research.weather",
+                    "label": "获取天气",
+                    "duration_s": 0.0029
+                  }
+                ]
+              },
+              "planner": {
+                "step_count": 3,
+                "total_duration_s": 0.4194,
+                "span_duration_s": 0.2102,
+                "top_steps": [
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.2097
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.2097
+                  },
+                  {
+                    "step_id": "planner.think",
+                    "label": "规划推理",
+                    "duration_s": 0.0
+                  }
+                ]
+              },
+              "transport": {
+                "step_count": 1,
+                "total_duration_s": 0.0003,
+                "span_duration_s": 0.0003,
+                "top_steps": [
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.0003
+                  }
+                ]
+              },
+              "budget": {
+                "step_count": 1,
+                "total_duration_s": 0.0001,
+                "span_duration_s": 0.0001,
+                "top_steps": [
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0001
+                  }
+                ]
+              },
+              "supervisor": {
+                "step_count": 2,
+                "total_duration_s": 0.0,
+                "span_duration_s": 0.001,
+                "top_steps": [
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.finalize",
+                    "label": "整理输出",
+                    "duration_s": 0.0
+                  }
+                ]
+              }
+            }
+          },
+          "segments": [
+            {
+              "step_id": "intent.parse",
+              "stage": "intent",
+              "label": "解析出行需求",
+              "status": "done",
+              "start_offset_s": 0.0157,
+              "end_offset_s": 0.0166,
+              "duration_s": 0.001,
+              "message": "已解析 青岛 3 天 / 预算 3500"
+            },
+            {
+              "step_id": "food.search",
+              "stage": "food",
+              "label": "检索特色美食",
+              "status": "done",
+              "start_offset_s": 2.4321,
+              "end_offset_s": 2.4325,
+              "duration_s": 0.0004,
+              "message": "已找到 6 条当地美食，优先保留 等俺船靠岸·老船蒸鲜·渔家菜(全球创始店) 等代表性餐饮"
+            },
+            {
+              "step_id": "research.weather",
+              "stage": "research",
+              "label": "获取天气",
+              "status": "done",
+              "start_offset_s": 2.4308,
+              "end_offset_s": 2.4337,
+              "duration_s": 0.0029,
+              "message": "天气评级：良好"
+            },
+            {
+              "step_id": "research.poi_guard",
+              "stage": "research",
+              "label": "候选合规检查",
+              "status": "done",
+              "start_offset_s": 2.4348,
+              "end_offset_s": 2.4592,
+              "duration_s": 0.0243,
+              "message": "合规候选 9 个"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 2.4641,
+              "end_offset_s": 2.4641,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 2.4646,
+              "end_offset_s": 2.6743,
+              "duration_s": 0.2097,
+              "message": "按活动负荷装箱：全程 4 个景区簇；每日负荷 D1 72/100；D2 72/100；D3 104/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 2.4646,
+              "end_offset_s": 2.6743,
+              "duration_s": 0.2097,
+              "message": "行程草案已生成（3 天 / 预计 ￥1390）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 2.6765,
+              "end_offset_s": 2.6768,
+              "duration_s": 0.0003,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 2.6777,
+              "end_offset_s": 2.6778,
+              "duration_s": 0.0001,
+              "message": "方案满足当前用户约束。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 2.6782,
+              "end_offset_s": 2.6782,
+              "duration_s": 0.0,
+              "message": "方案通过审查，准备整理最终输出"
+            },
+            {
+              "step_id": "supervisor.finalize",
+              "stage": "supervisor",
+              "label": "整理输出",
+              "status": "done",
+              "start_offset_s": 2.6792,
+              "end_offset_s": 2.6792,
+              "duration_s": 0.0,
+              "message": "最终结果已整理完成，输出 3 天行程"
+            }
+          ],
+          "event_count": 24
+        }
+      ],
+      "aggregate": {
+        "run_count": 2,
+        "success_count": 2,
+        "failure_count": 0,
+        "avg_elapsed_s": 34.2555,
+        "min_elapsed_s": 2.6816,
+        "max_elapsed_s": 65.8293,
+        "slowest_steps": [
+          {
+            "step_id": "research.poi_search",
+            "avg_duration_s": 60.1485,
+            "max_duration_s": 60.1485,
+            "sample_count": 1
+          },
+          {
+            "step_id": "food.search",
+            "avg_duration_s": 1.9282,
+            "max_duration_s": 3.8559,
+            "sample_count": 2
+          },
+          {
+            "step_id": "research.geocode",
+            "avg_duration_s": 1.6569,
+            "max_duration_s": 1.6569,
+            "sample_count": 1
+          },
+          {
+            "step_id": "research.weather",
+            "avg_duration_s": 0.5841,
+            "max_duration_s": 1.1653,
+            "sample_count": 2
+          },
+          {
+            "step_id": "transport.plan",
+            "avg_duration_s": 0.3282,
+            "max_duration_s": 0.6561,
+            "sample_count": 2
+          },
+          {
+            "step_id": "planner.cluster_layout",
+            "avg_duration_s": 0.2187,
+            "max_duration_s": 0.2276,
+            "sample_count": 2
+          },
+          {
+            "step_id": "planner.finalize",
+            "avg_duration_s": 0.2187,
+            "max_duration_s": 0.2276,
+            "sample_count": 2
+          },
+          {
+            "step_id": "research.poi_normalize",
+            "avg_duration_s": 0.1333,
+            "max_duration_s": 0.1333,
+            "sample_count": 1
+          },
+          {
+            "step_id": "research.poi_guard",
+            "avg_duration_s": 0.0244,
+            "max_duration_s": 0.0244,
+            "sample_count": 2
+          },
+          {
+            "step_id": "intent.parse",
+            "avg_duration_s": 0.0023,
+            "max_duration_s": 0.0035,
+            "sample_count": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "beijing_classic_4d",
+      "trip_request": {
+        "destination": "北京",
+        "start_date": "2026-06-08",
+        "days": 4,
+        "budget": 5200
+      },
+      "persona": {
+        "travel_style": "经典热门",
+        "stamina": "适中",
+        "transport_preference": "地铁/公交优先"
+      },
+      "runs": [
+        {
+          "run_label": "cold",
+          "success": true,
+          "error": "",
+          "elapsed_s": 78.6161,
+          "result_summary": {
+            "planning_attempts": 0,
+            "candidate_count": 9,
+            "map_poi_count": 9,
+            "issues": [
+              "Day 1 活动负荷偏高，超出当前体力节奏"
+            ],
+            "day_route_counts": [
+              2,
+              3,
+              2,
+              1
+            ],
+            "day_route_points": [
+              [
+                "颐和园",
+                "故宫博物院"
+              ],
+              [
+                "南锣鼓巷",
+                "天安门广场",
+                "圆明园遗址公园"
+              ],
+              [
+                "景山公园",
+                "天坛公园"
+              ],
+              [
+                "国家博物馆"
+              ]
+            ],
+            "estimated_total_cost": 2491.0
+          },
+          "step_summary": {
+            "by_step": {
+              "research.poi_search": {
+                "label": "检索候选景点",
+                "count": 1,
+                "total_duration_s": 72.8336,
+                "avg_duration_s": 72.8336,
+                "max_duration_s": 72.8336,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "food.search": {
+                "label": "检索特色美食",
+                "count": 1,
+                "total_duration_s": 3.3713,
+                "avg_duration_s": 3.3713,
+                "max_duration_s": 3.3713,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.geocode": {
+                "label": "地理编码",
+                "count": 1,
+                "total_duration_s": 2.5749,
+                "avg_duration_s": 2.5749,
+                "max_duration_s": 2.5749,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.weather": {
+                "label": "获取天气",
+                "count": 1,
+                "total_duration_s": 2.0905,
+                "avg_duration_s": 2.0905,
+                "max_duration_s": 2.0905,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "transport.plan": {
+                "label": "住行建议",
+                "count": 2,
+                "total_duration_s": 0.4136,
+                "avg_duration_s": 0.2068,
+                "max_duration_s": 0.4131,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_normalize": {
+                "label": "归一化与过滤",
+                "count": 1,
+                "total_duration_s": 0.2123,
+                "avg_duration_s": 0.2123,
+                "max_duration_s": 0.2123,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.cluster_layout": {
+                "label": "按负荷装箱排期",
+                "count": 2,
+                "total_duration_s": 0.0229,
+                "avg_duration_s": 0.0115,
+                "max_duration_s": 0.012,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.finalize": {
+                "label": "生成行程草案",
+                "count": 2,
+                "total_duration_s": 0.0229,
+                "avg_duration_s": 0.0115,
+                "max_duration_s": 0.012,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_guard": {
+                "label": "候选合规检查",
+                "count": 1,
+                "total_duration_s": 0.0075,
+                "avg_duration_s": 0.0075,
+                "max_duration_s": 0.0075,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "intent.parse": {
+                "label": "解析出行需求",
+                "count": 1,
+                "total_duration_s": 0.0008,
+                "avg_duration_s": 0.0008,
+                "max_duration_s": 0.0008,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "budget.review": {
+                "label": "预算审阅",
+                "count": 2,
+                "total_duration_s": 0.0005,
+                "avg_duration_s": 0.0003,
+                "max_duration_s": 0.0003,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.think": {
+                "label": "规划推理",
+                "count": 2,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.review": {
+                "label": "总审阅",
+                "count": 2,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.finalize": {
+                "label": "整理输出",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              }
+            },
+            "by_stage": {
+              "intent": {
+                "step_count": 1,
+                "total_duration_s": 0.0008,
+                "span_duration_s": 0.0008,
+                "top_steps": [
+                  {
+                    "step_id": "intent.parse",
+                    "label": "解析出行需求",
+                    "duration_s": 0.0008
+                  }
+                ]
+              },
+              "research": {
+                "step_count": 5,
+                "total_duration_s": 77.7188,
+                "span_duration_s": 75.7044,
+                "top_steps": [
+                  {
+                    "step_id": "research.poi_search",
+                    "label": "检索候选景点",
+                    "duration_s": 72.8336
+                  },
+                  {
+                    "step_id": "research.geocode",
+                    "label": "地理编码",
+                    "duration_s": 2.5749
+                  },
+                  {
+                    "step_id": "research.weather",
+                    "label": "获取天气",
+                    "duration_s": 2.0905
+                  },
+                  {
+                    "step_id": "research.poi_normalize",
+                    "label": "归一化与过滤",
+                    "duration_s": 0.2123
+                  },
+                  {
+                    "step_id": "research.poi_guard",
+                    "label": "候选合规检查",
+                    "duration_s": 0.0075
+                  }
+                ]
+              },
+              "food": {
+                "step_count": 1,
+                "total_duration_s": 3.3713,
+                "span_duration_s": 3.3714,
+                "top_steps": [
+                  {
+                    "step_id": "food.search",
+                    "label": "检索特色美食",
+                    "duration_s": 3.3713
+                  }
+                ]
+              },
+              "planner": {
+                "step_count": 6,
+                "total_duration_s": 0.0458,
+                "span_duration_s": 0.4479,
+                "top_steps": [
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.012
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.012
+                  },
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.0109
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.0109
+                  },
+                  {
+                    "step_id": "planner.think",
+                    "label": "规划推理",
+                    "duration_s": 0.0
+                  }
+                ]
+              },
+              "transport": {
+                "step_count": 2,
+                "total_duration_s": 0.4136,
+                "span_duration_s": 0.4354,
+                "top_steps": [
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.4131
+                  },
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.0005
+                  }
+                ]
+              },
+              "budget": {
+                "step_count": 2,
+                "total_duration_s": 0.0005,
+                "span_duration_s": 0.0231,
+                "top_steps": [
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0003
+                  },
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0002
+                  }
+                ]
+              },
+              "supervisor": {
+                "step_count": 3,
+                "total_duration_s": 0.0,
+                "span_duration_s": 0.0215,
+                "top_steps": [
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.finalize",
+                    "label": "整理输出",
+                    "duration_s": 0.0
+                  }
+                ]
+              }
+            }
+          },
+          "segments": [
+            {
+              "step_id": "intent.parse",
+              "stage": "intent",
+              "label": "解析出行需求",
+              "status": "done",
+              "start_offset_s": 0.0123,
+              "end_offset_s": 0.0131,
+              "duration_s": 0.0008,
+              "message": "已解析 北京 4 天 / 预算 5200"
+            },
+            {
+              "step_id": "research.weather",
+              "stage": "research",
+              "label": "获取天气",
+              "status": "done",
+              "start_offset_s": 2.4501,
+              "end_offset_s": 4.5407,
+              "duration_s": 2.0905,
+              "message": "天气评级：良好"
+            },
+            {
+              "step_id": "research.geocode",
+              "stage": "research",
+              "label": "地理编码",
+              "status": "done",
+              "start_offset_s": 2.4577,
+              "end_offset_s": 5.0326,
+              "duration_s": 2.5749,
+              "message": "已定位：北京市"
+            },
+            {
+              "step_id": "food.search",
+              "stage": "food",
+              "label": "检索特色美食",
+              "status": "done",
+              "start_offset_s": 2.4555,
+              "end_offset_s": 5.8269,
+              "duration_s": 3.3713,
+              "message": "已找到 6 条当地美食，优先保留 双流老妈兔头(双井店) 等代表性餐饮"
+            },
+            {
+              "step_id": "research.poi_search",
+              "stage": "research",
+              "label": "检索候选景点",
+              "status": "done",
+              "start_offset_s": 5.0326,
+              "end_offset_s": 77.8663,
+              "duration_s": 72.8336,
+              "message": "检索完成，原始候选 15 条"
+            },
+            {
+              "step_id": "research.poi_normalize",
+              "stage": "research",
+              "label": "归一化与过滤",
+              "status": "done",
+              "start_offset_s": 77.8663,
+              "end_offset_s": 78.0785,
+              "duration_s": 0.2123,
+              "message": "过滤后 9 条候选"
+            },
+            {
+              "step_id": "research.poi_guard",
+              "stage": "research",
+              "label": "候选合规检查",
+              "status": "done",
+              "start_offset_s": 78.147,
+              "end_offset_s": 78.1545,
+              "duration_s": 0.0075,
+              "message": "合规候选 9 个"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 78.1592,
+              "end_offset_s": 78.1593,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 78.1604,
+              "end_offset_s": 78.1724,
+              "duration_s": 0.012,
+              "message": "按活动负荷装箱：全程 8 个景区簇；每日负荷 D1 110/100；D2 98/100；D3 76/100；D4 72/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 78.1604,
+              "end_offset_s": 78.1724,
+              "duration_s": 0.012,
+              "message": "行程草案已生成（4 天 / 预计 ￥2491）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 78.175,
+              "end_offset_s": 78.5881,
+              "duration_s": 0.4131,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 78.589,
+              "end_offset_s": 78.5893,
+              "duration_s": 0.0003,
+              "message": "方案需要根据审查意见继续修正。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 78.5916,
+              "end_offset_s": 78.5916,
+              "duration_s": 0.0,
+              "message": "方案未通过审查，回到规划阶段收缩或重排"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 78.5954,
+              "end_offset_s": 78.5954,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 78.5961,
+              "end_offset_s": 78.607,
+              "duration_s": 0.0109,
+              "message": "按活动负荷装箱：全程 8 个景区簇；每日负荷 D1 110/100；D2 98/100；D3 76/100；D4 72/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 78.5961,
+              "end_offset_s": 78.6071,
+              "duration_s": 0.0109,
+              "message": "行程草案已生成（4 天 / 预计 ￥2491）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 78.6099,
+              "end_offset_s": 78.6104,
+              "duration_s": 0.0005,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 78.6119,
+              "end_offset_s": 78.6121,
+              "duration_s": 0.0002,
+              "message": "方案需要根据审查意见继续修正。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 78.6127,
+              "end_offset_s": 78.6127,
+              "duration_s": 0.0,
+              "message": "连续两轮审查结论完全一致且方案未变化，停止空转并输出当前最优结果"
+            },
+            {
+              "step_id": "supervisor.finalize",
+              "stage": "supervisor",
+              "label": "整理输出",
+              "status": "done",
+              "start_offset_s": 78.6131,
+              "end_offset_s": 78.6131,
+              "duration_s": 0.0,
+              "message": "最终结果已整理完成，输出 4 天行程"
+            }
+          ],
+          "event_count": 44
+        },
+        {
+          "run_label": "warm_1",
+          "success": true,
+          "error": "",
+          "elapsed_s": 2.5933,
+          "result_summary": {
+            "planning_attempts": 0,
+            "candidate_count": 9,
+            "map_poi_count": 9,
+            "issues": [
+              "Day 1 活动负荷偏高，超出当前体力节奏"
+            ],
+            "day_route_counts": [
+              2,
+              3,
+              2,
+              1
+            ],
+            "day_route_points": [
+              [
+                "颐和园",
+                "故宫博物院"
+              ],
+              [
+                "南锣鼓巷",
+                "天安门广场",
+                "圆明园遗址公园"
+              ],
+              [
+                "景山公园",
+                "天坛公园"
+              ],
+              [
+                "国家博物馆"
+              ]
+            ],
+            "estimated_total_cost": 2491.0
+          },
+          "step_summary": {
+            "by_step": {
+              "planner.finalize": {
+                "label": "生成行程草案",
+                "count": 2,
+                "total_duration_s": 0.0286,
+                "avg_duration_s": 0.0143,
+                "max_duration_s": 0.0151,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.cluster_layout": {
+                "label": "按负荷装箱排期",
+                "count": 2,
+                "total_duration_s": 0.0285,
+                "avg_duration_s": 0.0143,
+                "max_duration_s": 0.0151,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.poi_guard": {
+                "label": "候选合规检查",
+                "count": 1,
+                "total_duration_s": 0.0092,
+                "avg_duration_s": 0.0092,
+                "max_duration_s": 0.0092,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "intent.parse": {
+                "label": "解析出行需求",
+                "count": 1,
+                "total_duration_s": 0.0033,
+                "avg_duration_s": 0.0033,
+                "max_duration_s": 0.0033,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "research.weather": {
+                "label": "获取天气",
+                "count": 1,
+                "total_duration_s": 0.0018,
+                "avg_duration_s": 0.0018,
+                "max_duration_s": 0.0018,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "transport.plan": {
+                "label": "住行建议",
+                "count": 2,
+                "total_duration_s": 0.0014,
+                "avg_duration_s": 0.0007,
+                "max_duration_s": 0.0008,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "food.search": {
+                "label": "检索特色美食",
+                "count": 1,
+                "total_duration_s": 0.0005,
+                "avg_duration_s": 0.0005,
+                "max_duration_s": 0.0005,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "budget.review": {
+                "label": "预算审阅",
+                "count": 2,
+                "total_duration_s": 0.0005,
+                "avg_duration_s": 0.0003,
+                "max_duration_s": 0.0003,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "planner.think": {
+                "label": "规划推理",
+                "count": 2,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.review": {
+                "label": "总审阅",
+                "count": 2,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              },
+              "supervisor.finalize": {
+                "label": "整理输出",
+                "count": 1,
+                "total_duration_s": 0.0,
+                "avg_duration_s": 0.0,
+                "max_duration_s": 0.0,
+                "statuses": [
+                  "done"
+                ]
+              }
+            },
+            "by_stage": {
+              "intent": {
+                "step_count": 1,
+                "total_duration_s": 0.0033,
+                "span_duration_s": 0.0033,
+                "top_steps": [
+                  {
+                    "step_id": "intent.parse",
+                    "label": "解析出行需求",
+                    "duration_s": 0.0033
+                  }
+                ]
+              },
+              "food": {
+                "step_count": 1,
+                "total_duration_s": 0.0005,
+                "span_duration_s": 0.0005,
+                "top_steps": [
+                  {
+                    "step_id": "food.search",
+                    "label": "检索特色美食",
+                    "duration_s": 0.0005
+                  }
+                ]
+              },
+              "research": {
+                "step_count": 2,
+                "total_duration_s": 0.011,
+                "span_duration_s": 0.0121,
+                "top_steps": [
+                  {
+                    "step_id": "research.poi_guard",
+                    "label": "候选合规检查",
+                    "duration_s": 0.0092
+                  },
+                  {
+                    "step_id": "research.weather",
+                    "label": "获取天气",
+                    "duration_s": 0.0018
+                  }
+                ]
+              },
+              "planner": {
+                "step_count": 6,
+                "total_duration_s": 0.0571,
+                "span_duration_s": 0.0415,
+                "top_steps": [
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.0151
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.0151
+                  },
+                  {
+                    "step_id": "planner.finalize",
+                    "label": "生成行程草案",
+                    "duration_s": 0.0135
+                  },
+                  {
+                    "step_id": "planner.cluster_layout",
+                    "label": "按负荷装箱排期",
+                    "duration_s": 0.0134
+                  },
+                  {
+                    "step_id": "planner.think",
+                    "label": "规划推理",
+                    "duration_s": 0.0
+                  }
+                ]
+              },
+              "transport": {
+                "step_count": 2,
+                "total_duration_s": 0.0014,
+                "span_duration_s": 0.0264,
+                "top_steps": [
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.0008
+                  },
+                  {
+                    "step_id": "transport.plan",
+                    "label": "住行建议",
+                    "duration_s": 0.0006
+                  }
+                ]
+              },
+              "budget": {
+                "step_count": 2,
+                "total_duration_s": 0.0005,
+                "span_duration_s": 0.0245,
+                "top_steps": [
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0003
+                  },
+                  {
+                    "step_id": "budget.review",
+                    "label": "预算审阅",
+                    "duration_s": 0.0002
+                  }
+                ]
+              },
+              "supervisor": {
+                "step_count": 3,
+                "total_duration_s": 0.0,
+                "span_duration_s": 0.0256,
+                "top_steps": [
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.review",
+                    "label": "总审阅",
+                    "duration_s": 0.0
+                  },
+                  {
+                    "step_id": "supervisor.finalize",
+                    "label": "整理输出",
+                    "duration_s": 0.0
+                  }
+                ]
+              }
+            }
+          },
+          "segments": [
+            {
+              "step_id": "intent.parse",
+              "stage": "intent",
+              "label": "解析出行需求",
+              "status": "done",
+              "start_offset_s": 0.0174,
+              "end_offset_s": 0.0207,
+              "duration_s": 0.0033,
+              "message": "已解析 北京 4 天 / 预算 5200"
+            },
+            {
+              "step_id": "food.search",
+              "stage": "food",
+              "label": "检索特色美食",
+              "status": "done",
+              "start_offset_s": 2.5254,
+              "end_offset_s": 2.5259,
+              "duration_s": 0.0005,
+              "message": "已找到 6 条当地美食，优先保留 双流老妈兔头(双井店) 等代表性餐饮"
+            },
+            {
+              "step_id": "research.weather",
+              "stage": "research",
+              "label": "获取天气",
+              "status": "done",
+              "start_offset_s": 2.525,
+              "end_offset_s": 2.5268,
+              "duration_s": 0.0018,
+              "message": "天气评级：良好"
+            },
+            {
+              "step_id": "research.poi_guard",
+              "stage": "research",
+              "label": "候选合规检查",
+              "status": "done",
+              "start_offset_s": 2.528,
+              "end_offset_s": 2.5371,
+              "duration_s": 0.0092,
+              "message": "合规候选 9 个"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 2.5414,
+              "end_offset_s": 2.5415,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 2.542,
+              "end_offset_s": 2.5571,
+              "duration_s": 0.0151,
+              "message": "按活动负荷装箱：全程 8 个景区簇；每日负荷 D1 110/100；D2 98/100；D3 76/100；D4 72/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 2.542,
+              "end_offset_s": 2.5571,
+              "duration_s": 0.0151,
+              "message": "行程草案已生成（4 天 / 预计 ￥2491）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 2.5603,
+              "end_offset_s": 2.5612,
+              "duration_s": 0.0008,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 2.563,
+              "end_offset_s": 2.5632,
+              "duration_s": 0.0003,
+              "message": "方案需要根据审查意见继续修正。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 2.5644,
+              "end_offset_s": 2.5644,
+              "duration_s": 0.0,
+              "message": "方案未通过审查，回到规划阶段收缩或重排"
+            },
+            {
+              "step_id": "planner.think",
+              "stage": "planner",
+              "label": "规划推理",
+              "status": "done",
+              "start_offset_s": 2.5676,
+              "end_offset_s": 2.5677,
+              "duration_s": 0.0,
+              "message": "当前候选池满足要求，进入方案生成"
+            },
+            {
+              "step_id": "planner.cluster_layout",
+              "stage": "planner",
+              "label": "按负荷装箱排期",
+              "status": "done",
+              "start_offset_s": 2.5695,
+              "end_offset_s": 2.5829,
+              "duration_s": 0.0134,
+              "message": "按活动负荷装箱：全程 8 个景区簇；每日负荷 D1 110/100；D2 98/100；D3 76/100；D4 72/100"
+            },
+            {
+              "step_id": "planner.finalize",
+              "stage": "planner",
+              "label": "生成行程草案",
+              "status": "done",
+              "start_offset_s": 2.5695,
+              "end_offset_s": 2.5829,
+              "duration_s": 0.0135,
+              "message": "行程草案已生成（4 天 / 预计 ￥2491）"
+            },
+            {
+              "step_id": "transport.plan",
+              "stage": "transport",
+              "label": "住行建议",
+              "status": "done",
+              "start_offset_s": 2.586,
+              "end_offset_s": 2.5867,
+              "duration_s": 0.0006,
+              "message": "住宿候选 6 家，已生成景点地图与入住建议，景点间导航请结合地图 App 实时查看"
+            },
+            {
+              "step_id": "budget.review",
+              "stage": "budget",
+              "label": "预算审阅",
+              "status": "done",
+              "start_offset_s": 2.5873,
+              "end_offset_s": 2.5875,
+              "duration_s": 0.0002,
+              "message": "方案需要根据审查意见继续修正。"
+            },
+            {
+              "step_id": "supervisor.review",
+              "stage": "supervisor",
+              "label": "总审阅",
+              "status": "done",
+              "start_offset_s": 2.5894,
+              "end_offset_s": 2.5894,
+              "duration_s": 0.0,
+              "message": "连续两轮审查结论完全一致且方案未变化，停止空转并输出当前最优结果"
+            },
+            {
+              "step_id": "supervisor.finalize",
+              "stage": "supervisor",
+              "label": "整理输出",
+              "status": "done",
+              "start_offset_s": 2.59,
+              "end_offset_s": 2.59,
+              "duration_s": 0.0,
+              "message": "最终结果已整理完成，输出 4 天行程"
+            }
+          ],
+          "event_count": 37
+        }
+      ],
+      "aggregate": {
+        "run_count": 2,
+        "success_count": 2,
+        "failure_count": 0,
+        "avg_elapsed_s": 40.6047,
+        "min_elapsed_s": 2.5933,
+        "max_elapsed_s": 78.6161,
+        "slowest_steps": [
+          {
+            "step_id": "research.poi_search",
+            "avg_duration_s": 72.8336,
+            "max_duration_s": 72.8336,
+            "sample_count": 1
+          },
+          {
+            "step_id": "research.geocode",
+            "avg_duration_s": 2.5749,
+            "max_duration_s": 2.5749,
+            "sample_count": 1
+          },
+          {
+            "step_id": "food.search",
+            "avg_duration_s": 1.6859,
+            "max_duration_s": 3.3713,
+            "sample_count": 2
+          },
+          {
+            "step_id": "research.weather",
+            "avg_duration_s": 1.0461,
+            "max_duration_s": 2.0905,
+            "sample_count": 2
+          },
+          {
+            "step_id": "research.poi_normalize",
+            "avg_duration_s": 0.2123,
+            "max_duration_s": 0.2123,
+            "sample_count": 1
+          },
+          {
+            "step_id": "transport.plan",
+            "avg_duration_s": 0.2075,
+            "max_duration_s": 0.4136,
+            "sample_count": 2
+          },
+          {
+            "step_id": "planner.finalize",
+            "avg_duration_s": 0.0258,
+            "max_duration_s": 0.0286,
+            "sample_count": 2
+          },
+          {
+            "step_id": "planner.cluster_layout",
+            "avg_duration_s": 0.0257,
+            "max_duration_s": 0.0285,
+            "sample_count": 2
+          },
+          {
+            "step_id": "research.poi_guard",
+            "avg_duration_s": 0.0083,
+            "max_duration_s": 0.0092,
+            "sample_count": 2
+          },
+          {
+            "step_id": "intent.parse",
+            "avg_duration_s": 0.0021,
+            "max_duration_s": 0.0033,
+            "sample_count": 2
+          }
+        ]
+      }
+    }
+  ],
+  "overall": {
+    "run_count": 4,
+    "success_count": 4,
+    "failure_count": 0,
+    "avg_elapsed_s": 37.4301,
+    "min_elapsed_s": 2.5933,
+    "max_elapsed_s": 78.6161,
+    "slowest_steps": [
+      {
+        "step_id": "research.poi_search",
+        "avg_duration_s": 66.4911,
+        "max_duration_s": 72.8336,
+        "sample_count": 2
+      },
+      {
+        "step_id": "research.geocode",
+        "avg_duration_s": 2.1159,
+        "max_duration_s": 2.5749,
+        "sample_count": 2
+      },
+      {
+        "step_id": "food.search",
+        "avg_duration_s": 1.807,
+        "max_duration_s": 3.8559,
+        "sample_count": 4
+      },
+      {
+        "step_id": "research.weather",
+        "avg_duration_s": 0.8151,
+        "max_duration_s": 2.0905,
+        "sample_count": 4
+      },
+      {
+        "step_id": "transport.plan",
+        "avg_duration_s": 0.2679,
+        "max_duration_s": 0.6561,
+        "sample_count": 4
+      },
+      {
+        "step_id": "research.poi_normalize",
+        "avg_duration_s": 0.1728,
+        "max_duration_s": 0.2123,
+        "sample_count": 2
+      },
+      {
+        "step_id": "planner.finalize",
+        "avg_duration_s": 0.1222,
+        "max_duration_s": 0.2276,
+        "sample_count": 4
+      },
+      {
+        "step_id": "planner.cluster_layout",
+        "avg_duration_s": 0.1222,
+        "max_duration_s": 0.2276,
+        "sample_count": 4
+      },
+      {
+        "step_id": "research.poi_guard",
+        "avg_duration_s": 0.0163,
+        "max_duration_s": 0.0244,
+        "sample_count": 4
+      },
+      {
+        "step_id": "intent.parse",
+        "avg_duration_s": 0.0022,
+        "max_duration_s": 0.0035,
+        "sample_count": 4
+      }
+    ]
+  }
+}

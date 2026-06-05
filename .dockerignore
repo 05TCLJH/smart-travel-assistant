@@ -1,0 +1,17 @@
+.venv/
+.idea/
+__pycache__/
+*.py[cod]
+.env
+*.log
+.git/
+.gitignore
+README.md
+*.md
+tests/
+scripts/
+data/runtime/
+data/reports/
+data/_*.json
+data/_*.txt
+data/reports/*.pdf

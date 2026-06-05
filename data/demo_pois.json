@@ -1,0 +1,74 @@
+{
+  "南昌": {
+    "geo": { "lng": 115.857972, "lat": 28.682976 },
+    "resolved_name": "江西省南昌市",
+    "admin1": "江西省",
+    "aliases": ["南昌", "南昌市"],
+    "pois": [
+      { "name": "滕王阁", "address": "东湖区仿古街58号", "type": "风景名胜", "rating": "4.8", "location": "115.880500,28.681000", "knowledge_tags": ["城市地标", "历史文化"] },
+      { "name": "江西省博物馆", "address": "红谷滩区赣江北大道698号", "type": "博物馆", "rating": "4.9", "location": "115.881823,28.705900", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "八一起义纪念馆", "address": "西湖区中山路380号", "type": "纪念馆", "rating": "4.8", "location": "115.892539,28.677119", "knowledge_tags": ["历史文化"] },
+      { "name": "秋水广场", "address": "红谷滩区赣江中大道", "type": "城市广场", "rating": "4.7", "location": "115.857111,28.692316", "knowledge_tags": ["城市地标", "夜景"] },
+      { "name": "梅岭国家森林公园", "address": "湾里管理局", "type": "国家森林公园", "rating": "4.6", "location": "115.738900,28.781000", "knowledge_tags": ["自然风景"] },
+      { "name": "万寿宫历史文化街区", "address": "西湖区中山路", "type": "历史文化街区", "rating": "4.7", "location": "115.887801,28.676809", "knowledge_tags": ["历史文化", "夜游"] }
+    ]
+  },
+  "上海": {
+    "geo": { "lng": 121.473701, "lat": 31.230416 },
+    "resolved_name": "上海市",
+    "admin1": "上海市",
+    "aliases": ["上海", "上海市"],
+    "pois": [
+      { "name": "外滩", "address": "黄浦区中山东一路", "type": "风景名胜", "rating": "4.9", "location": "121.490317,31.239703", "knowledge_tags": ["城市地标", "夜景", "历史文化"] },
+      { "name": "东方明珠广播电视塔", "address": "浦东新区世纪大道1号", "type": "风景名胜", "rating": "4.8", "location": "121.499718,31.239664", "knowledge_tags": ["城市地标", "热门景点"] },
+      { "name": "豫园", "address": "黄浦区福佑路168号", "type": "风景名胜", "rating": "4.8", "location": "121.492238,31.226831", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "上海博物馆", "address": "黄浦区人民大道201号", "type": "博物馆", "rating": "4.9", "location": "121.475315,31.228608", "knowledge_tags": ["博物馆", "历史文化"] },
+      { "name": "田子坊", "address": "黄浦区泰康路210弄", "type": "特色街区", "rating": "4.7", "location": "121.469091,31.209945", "knowledge_tags": ["街区", "历史文化"] },
+      { "name": "新天地", "address": "黄浦区太仓路181弄", "type": "特色街区", "rating": "4.7", "location": "121.474658,31.222806", "knowledge_tags": ["街区", "夜景"] },
+      { "name": "武康大楼", "address": "徐汇区淮海中路1850号", "type": "风景名胜", "rating": "4.8", "location": "121.434548,31.206739", "knowledge_tags": ["城市地标", "历史文化"] },
+      { "name": "中华艺术宫", "address": "浦东新区上南路205号", "type": "博物馆", "rating": "4.7", "location": "121.493515,31.182759", "knowledge_tags": ["博物馆", "城市地标"] },
+      { "name": "朱家角古镇", "address": "青浦区课植园路555号", "type": "风景名胜", "rating": "4.7", "location": "121.054962,31.112776", "knowledge_tags": ["历史文化", "自然风景"] },
+      { "name": "上海科技馆", "address": "浦东新区世纪大道2000号", "type": "科技馆", "rating": "4.8", "location": "121.542434,31.220933", "knowledge_tags": ["博物馆", "室内"] },
+      { "name": "城隍庙旅游区", "address": "黄浦区方浜中路249号", "type": "风景名胜", "rating": "4.7", "location": "121.491364,31.225319", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "陆家嘴中心绿地", "address": "浦东新区陆家嘴环路717号", "type": "公园", "rating": "4.6", "location": "121.503899,31.235934", "knowledge_tags": ["自然风景", "城市地标"] }
+    ]
+  },
+  "北京": {
+    "geo": { "lng": 116.407526, "lat": 39.90403 },
+    "resolved_name": "北京市",
+    "admin1": "北京市",
+    "aliases": ["北京", "北京市", "帝都"],
+    "pois": [
+      { "name": "故宫博物院", "address": "东城区景山前街4号", "type": "博物馆", "rating": "4.9", "location": "116.397026,39.918058", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "天安门广场", "address": "东城区东长安街", "type": "城市广场", "rating": "4.8", "location": "116.397477,39.908692", "knowledge_tags": ["城市地标", "历史文化"] },
+      { "name": "天坛公园", "address": "东城区天坛东里甲1号", "type": "公园", "rating": "4.8", "location": "116.417312,39.882178", "knowledge_tags": ["历史文化"] },
+      { "name": "八达岭长城", "address": "延庆区G6辅路", "type": "风景名胜", "rating": "4.8", "location": "116.020984,40.356311", "knowledge_tags": ["自然风景", "城市地标"] },
+      { "name": "颐和园", "address": "海淀区新建宫门路19号", "type": "公园", "rating": "4.8", "location": "116.275481,39.998627", "knowledge_tags": ["历史文化", "自然风景"] },
+      { "name": "圆明园遗址公园", "address": "海淀区清华西路28号", "type": "公园", "rating": "4.7", "location": "116.314607,40.01629", "knowledge_tags": ["历史文化", "自然风景"] },
+      { "name": "恭王府", "address": "西城区前海西街17号", "type": "风景名胜", "rating": "4.7", "location": "116.386302,39.939441", "knowledge_tags": ["历史文化"] },
+      { "name": "国家博物馆", "address": "东城区东长安街16号", "type": "博物馆", "rating": "4.9", "location": "116.407954,39.905534", "knowledge_tags": ["历史文化"] },
+      { "name": "景山公园", "address": "西城区景山西街44号", "type": "公园", "rating": "4.7", "location": "116.397496,39.923301", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "北海公园", "address": "西城区文津街1号", "type": "公园", "rating": "4.8", "location": "116.390639,39.933089", "knowledge_tags": ["历史文化", "自然风景"] },
+      { "name": "什刹海", "address": "西城区羊房胡同23号", "type": "风景名胜", "rating": "4.7", "location": "116.387407,39.949314", "knowledge_tags": ["历史文化", "夜景"] },
+      { "name": "雍和宫", "address": "东城区雍和宫大街28号", "type": "寺庙", "rating": "4.8", "location": "116.423565,39.953848", "knowledge_tags": ["历史文化"] }
+    ]
+  },
+  "南京": {
+    "geo": { "lng": 118.796877, "lat": 32.060255 },
+    "resolved_name": "江苏省南京市",
+    "admin1": "江苏省",
+    "aliases": ["南京", "南京市"],
+    "pois": [
+      { "name": "南京博物院", "address": "玄武区中山东路321号", "type": "博物馆", "rating": "4.9", "location": "118.848972,32.041559", "knowledge_tags": ["历史文化", "博物馆"] },
+      { "name": "总统府", "address": "玄武区长江路292号", "type": "风景名胜", "rating": "4.8", "location": "118.792412,32.044365", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "夫子庙", "address": "秦淮区贡院西街53号", "type": "风景名胜", "rating": "4.7", "location": "118.792938,32.023482", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "老门东历史文化街区", "address": "秦淮区中华门以东", "type": "历史文化街区", "rating": "4.8", "location": "118.786593,32.014775", "knowledge_tags": ["历史文化", "夜景"] },
+      { "name": "鸡鸣寺", "address": "玄武区鸡鸣寺路1号", "type": "寺庙道观", "rating": "4.7", "location": "118.792979,32.069282", "knowledge_tags": ["历史文化"] },
+      { "name": "玄武湖公园", "address": "玄武区玄武巷1号", "type": "公园", "rating": "4.7", "location": "118.802615,32.072742", "knowledge_tags": ["自然风景", "城市地标"] },
+      { "name": "中山陵景区", "address": "玄武区石象路7号", "type": "风景名胜", "rating": "4.8", "location": "118.860089,32.062351", "knowledge_tags": ["历史文化", "城市地标"] },
+      { "name": "明孝陵景区", "address": "玄武区石象路7号", "type": "风景名胜", "rating": "4.8", "location": "118.851983,32.060402", "knowledge_tags": ["历史文化", "自然风景"] },
+      { "name": "颐和路历史文化街区", "address": "鼓楼区江苏路附近", "type": "历史文化街区", "rating": "4.7", "location": "118.764338,32.056615", "knowledge_tags": ["历史文化"] },
+      { "name": "南京城墙", "address": "秦淮区中华门城堡", "type": "风景名胜", "rating": "4.8", "location": "118.778859,32.010373", "knowledge_tags": ["历史文化", "城市地标"] }
+    ]
+  }
+}

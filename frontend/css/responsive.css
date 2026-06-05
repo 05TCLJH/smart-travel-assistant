@@ -1,0 +1,229 @@
+/* 响应式适配补充 */
+
+/* 平板设备 */
+@media (max-width: 1024px) {
+    .planner-workbench {
+        grid-template-columns: 56px 280px 1fr;
+        gap: 16px;
+    }
+    
+    .nav-container { padding: 0 20px; }
+    .sidebar-card { padding: 28px; }
+    .stage-body { padding: 28px; }
+}
+
+/* 小屏设备 */
+@media (max-width: 768px) {
+    .top-shell { padding: 12px 0 6px; }
+    .main-content { padding: 16px 0 20px; height: calc(100vh - 80px); }
+    
+    .planner-workbench {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+    }
+    
+    /* 图标导航改为横向 */
+    .workbench-rail {
+        flex-direction: row;
+        justify-content: center;
+        padding: 8px 0;
+        gap: 8px;
+    }
+    
+    .rail-btn {
+        width: 42px;
+        height: 42px;
+    }
+    
+    /* 调整面板顺序 */
+    .workspace-sidebar {
+        order: 2;
+        max-height: min(42vh, 420px);
+    }
+    
+    .workspace-stage { order: 1; }
+    
+    /* 简化卡片 */
+    .sidebar-card { padding: 20px; border-radius: var(--radius-md); }
+    .stage-body { padding: 20px; }
+    .empty-stage-panel-main { padding: 32px 24px; }
+}
+
+/* 手机竖屏 */
+@media (max-width: 480px) {
+    .nav-brand h1 { font-size: 1rem; }
+    .brand-logo { width: 32px; height: 32px; }
+    
+    .form-grid { grid-template-columns: 1fr; gap: 14px; }
+    .persona-form { grid-template-columns: 1fr; }
+    
+    .stage-overview-grid { grid-template-columns: 1fr; }
+    
+    .btn-primary { height: 44px; font-size: 0.88rem; }
+}
+
+/* 设计系统响应式收敛：在小屏保持简约、减少拥挤与横向溢出 */
+@media (max-width: 1180px) {
+    .top-shell,
+    .main-content {
+        width: min(100% - 32px, 1180px);
+    }
+
+    .planner-workbench {
+        grid-template-columns: 56px 288px minmax(0, 1fr);
+        gap: var(--space-4);
+    }
+
+    .stage-body {
+        --stage-body-pad-x: 28px;
+        padding: var(--space-6);
+    }
+
+    .sidebar-card {
+        padding: var(--space-6);
+    }
+}
+
+@media (max-width: 920px) {
+    html,
+    body {
+        overflow: auto;
+    }
+
+    .top-shell,
+    .main-content {
+        width: min(100% - 24px, 760px);
+    }
+
+    .main-content {
+        height: auto;
+        min-height: calc(100vh - 88px);
+    }
+
+    .planner-workbench {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: var(--space-4);
+    }
+
+    .workbench-rail {
+        position: sticky;
+        top: 8px;
+        z-index: 120;
+        flex-direction: row;
+        justify-content: center;
+        padding: var(--space-2);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.78);
+        -webkit-backdrop-filter: blur(16px) saturate(1.08);
+        backdrop-filter: blur(16px) saturate(1.08);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .workspace-sidebar {
+        order: initial;
+        max-height: none;
+        padding-right: 0;
+        overflow: visible;
+    }
+
+    .workspace-stage {
+        order: initial;
+        min-height: min(760px, 80vh);
+    }
+
+    .stage-body {
+        --stage-body-pad-x: 24px;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .tips-card-grid,
+    .tip-card {
+        grid-template-columns: 1fr;
+    }
+
+    .tip-card__title,
+    .tip-card__body {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    .top-shell,
+    .main-content {
+        width: calc(100% - 20px);
+    }
+
+    .nav-container {
+        min-height: 56px;
+        padding: 0 var(--space-4);
+    }
+
+    .nav-actions {
+        display: none;
+    }
+
+    .sidebar-card,
+    .stage-body,
+    .result-accordion__body {
+        padding: var(--space-4);
+    }
+
+    .stage-topbar {
+        align-items: flex-start;
+        padding: var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .stage-topbar-actions {
+        display: none;
+    }
+
+    .stage-header {
+        margin-bottom: var(--space-4);
+    }
+
+    .plan-overview-hero {
+        padding: var(--space-4);
+        border-radius: var(--radius-lg);
+    }
+
+    .plan-budget-ring {
+        width: 76px;
+        height: 76px;
+    }
+
+    .result-accordion > summary {
+        min-height: 54px;
+        padding: 0 var(--space-4);
+    }
+
+    .spot-card {
+        flex-direction: column;
+    }
+
+    .spot-card__meta {
+        align-items: flex-start;
+        max-width: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .day-timeline__item {
+        grid-template-columns: 52px 16px minmax(0, 1fr);
+        gap: 0 var(--space-2);
+    }
+
+    .day-timeline__item:not(:last-child)::after {
+        left: 59px;
+    }
+
+    .result-row-split {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--space-1);
+    }
+}

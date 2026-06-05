@@ -1,0 +1,11 @@
+{
+  "destinations": 200,
+  "unique_hotspot_seeds": 3676,
+  "in_curated_json": 3676,
+  "missing_from_curated_json": 0,
+  "invalid_curated_entries": 0,
+  "coverage_curated_pct": 100.0,
+  "full_coverage": true,
+  "missing_seeds": [],
+  "invalid_curated": []
+}

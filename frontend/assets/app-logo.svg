@@ -1,0 +1,58 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="16" y1="8" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#84DEC9"/>
+      <stop offset="0.48" stop-color="#3D9F96"/>
+      <stop offset="1" stop-color="#124E49"/>
+    </linearGradient>
+    <linearGradient id="route" x1="18" y1="92" x2="110" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#D4F5EE" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="core" x1="48" y1="48" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B8EDE4"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="82" y1="20" x2="104" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF0C9"/>
+      <stop offset="1" stop-color="#E5A035"/>
+    </linearGradient>
+    <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="32" fill="url(#bg)"/>
+  <rect x="7.5" y="7.5" width="113" height="113" rx="30" stroke="rgba(255,255,255,0.34)" stroke-width="1.5"/>
+  <g transform="translate(64 63) scale(1.2) translate(-64 -63)">
+    <!-- 罗盘 -->
+    <circle cx="64" cy="63" r="38" fill="rgba(255,255,255,0.11)" stroke="rgba(255,255,255,0.24)" stroke-width="1.4"/>
+    <path d="M64 26V40M64 86V100M24 63H38M90 63H104" stroke="rgba(255,255,255,0.3)" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M38 38L48 48M80 80L90 90M90 38L80 48M48 80L38 90" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round"/>
+    <!-- 智能核心 -->
+    <circle cx="64" cy="63" r="20" fill="url(#core)" filter="url(#soft)"/>
+    <path d="M64 45L68.4 58.2L82 63L68.4 67.8L64 81L59.6 67.8L46 63L59.6 58.2L64 45Z" fill="#1A6B64"/>
+    <circle cx="64" cy="63" r="4.5" fill="#1A6B64"/>
+    <!-- 航线 -->
+    <path d="M18 88C32 56 48 44 64 52C80 60 94 48 110 28" stroke="rgba(255,255,255,0.2)" stroke-width="9" stroke-linecap="round"/>
+    <path d="M18 88C32 56 48 44 64 52C80 60 94 48 110 28" stroke="url(#route)" stroke-width="4.8" stroke-linecap="round" filter="url(#soft)"/>
+    <!-- 节点 -->
+    <circle cx="34" cy="68" r="5.5" fill="#FFFFFF"/>
+    <circle cx="34" cy="68" r="2.4" fill="#1A6B64"/>
+    <circle cx="64" cy="52" r="6" fill="#FFFFFF"/>
+    <circle cx="64" cy="52" r="2.6" fill="#1A6B64"/>
+    <circle cx="92" cy="44" r="5.5" fill="#FFFFFF"/>
+    <circle cx="92" cy="44" r="2.4" fill="#1A6B64"/>
+    <!-- 目的地 -->
+    <path d="M106 22L112 34H100L106 22Z" fill="#FFFFFF"/>
+    <circle cx="106" cy="20" r="7" fill="#FFFFFF"/>
+    <circle cx="106" cy="20" r="3" fill="#1A6B64"/>
+    <!-- 智能火花 -->
+    <circle cx="100" cy="28" r="9" fill="url(#spark)"/>
+    <path d="M100 21V35M93 28H107" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M94 23L106 35M106 23L94 35" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "name": "刘军",
+  "age_group": "18-25",
+  "companions": 1,
+  "poi_cap_override": true,
+  "max_pois_per_day": 4,
+  "travel_style": "经典热门",
+  "stamina": "充沛",
+  "budget_style": "高品质"
+}

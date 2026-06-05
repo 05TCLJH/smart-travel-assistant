@@ -1,0 +1,51 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="20" y1="16" x2="108" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F3FAF8"/>
+      <stop offset="1" stop-color="#C8E6DC"/>
+    </linearGradient>
+    <linearGradient id="pack" x1="40" y1="32" x2="88" y2="104" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5EC4B8"/>
+      <stop offset="0.55" stop-color="#2E8F86"/>
+      <stop offset="1" stop-color="#1A5F58"/>
+    </linearGradient>
+    <linearGradient id="packLight" x1="48" y1="40" x2="72" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="strap" x1="64" y1="18" x2="64" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7AD4C8"/>
+      <stop offset="1" stop-color="#2A7A72"/>
+    </linearGradient>
+    <linearGradient id="buckle" x1="56" y1="44" x2="72" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F0D090"/>
+      <stop offset="1" stop-color="#D8943A"/>
+    </linearGradient>
+  </defs>
+  <!-- 圆角底 -->
+  <rect x="10" y="10" width="108" height="108" rx="28" fill="url(#bg)"/>
+  <rect x="10" y="10" width="108" height="108" rx="28" stroke="#B5D5CB" stroke-width="2"/>
+  <!-- 肩带 -->
+  <path d="M48 28C48 20 54 16 64 16C74 16 80 20 80 28" stroke="url(#strap)" stroke-width="5.5" stroke-linecap="round"/>
+  <path d="M52 28V38M76 28V38" stroke="url(#strap)" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- 背包主体 -->
+  <path d="M38 40H90C96.63 40 102 45.37 102 52V92C102 98.63 96.63 104 90 104H38C31.37 104 26 98.63 26 92V52C26 45.37 31.37 40 38 40Z" fill="url(#pack)"/>
+  <path d="M38 40H90C96.63 40 102 45.37 102 52V92C102 98.63 96.63 104 90 104H38C31.37 104 26 98.63 26 92V52C26 45.37 31.37 40 38 40Z" fill="url(#packLight)"/>
+  <!-- 顶部翻盖 -->
+  <path d="M34 48H94C98.42 48 102 51.58 102 56V64C102 68.42 98.42 72 94 72H34C29.58 72 26 68.42 26 64V56C26 51.58 29.58 48 34 48Z" fill="#1A5F58" fill-opacity="0.35"/>
+  <path d="M34 48H94C98.42 48 102 51.58 102 56V60H26V56C26 51.58 29.58 48 34 48Z" fill="#2E8F86" fill-opacity="0.5"/>
+  <!-- 卡扣 -->
+  <rect x="54" y="52" width="20" height="10" rx="4" fill="url(#buckle)"/>
+  <rect x="58" y="54" width="12" height="6" rx="2" fill="rgba(255,255,255,0.35)"/>
+  <!-- 前袋 -->
+  <path d="M42 76H86C90.42 76 94 79.58 94 84V94C94 98.42 90.42 102 86 102H42C37.58 102 34 98.42 34 94V84C34 79.58 37.58 76 42 76Z" fill="#1A5F58" fill-opacity="0.45"/>
+  <path d="M42 76H86C90.42 76 94 79.58 94 84V88H34V84C34 79.58 37.58 76 42 76Z" fill="rgba(255,255,255,0.12)"/>
+  <!-- 拉链线 -->
+  <path d="M64 48V102" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="64" cy="50" r="2" fill="rgba(255,255,255,0.5)"/>
+  <!-- 侧袋细节 -->
+  <path d="M26 58V82C26 86 28 88 30 88" stroke="#2E8F86" stroke-width="3" stroke-linecap="round"/>
+  <path d="M102 58V82C102 86 100 88 98 88" stroke="#2E8F86" stroke-width="3" stroke-linecap="round"/>
+  <!-- 底部阴影 -->
+  <ellipse cx="64" cy="108" rx="28" ry="4" fill="rgba(30,106,98,0.12)"/>
+</svg>

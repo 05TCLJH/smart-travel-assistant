@@ -1,0 +1,13 @@
+.venv/
+.idea/
+
+__pycache__/
+*.py[cod]
+
+.env
+
+data/reports/*.pdf
+data/reports/*.png
+data/reports/*.jpg
+
+*.log
