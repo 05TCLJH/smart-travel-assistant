@@ -1,3 +1,4 @@
+<!-- 智能旅游助手前端入口页面，负责承载整体布局、资源引入与页面骨架。 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,24 +7,23 @@
     <title>智能旅游助手</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/app-logo.svg?v=2">
-    <link rel="stylesheet" href="css/style.css?v=2">
-    <link rel="stylesheet" href="css/components.css?v=2">
-    <link rel="stylesheet" href="css/responsive.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/app-logo.svg?v=7">
+    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/components.css?v=16">
+    <link rel="stylesheet" href="css/enhancements.css?v=15">
+    <link rel="stylesheet" href="css/responsive.css?v=5">
 </head>
 <body>
-    <!-- 简洁导航栏 -->
     <header class="top-shell">
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-brand">
                     <div class="brand-logo">
-                        <img src="assets/app-logo.svg?v=2" alt="">
+                        <img src="assets/app-logo.svg?v=7" alt="智能旅游助手">
                     </div>
                     <h1>智能旅游助手</h1>
                 </div>
-
                 <div class="nav-actions">
                     <div class="nav-mode-card" id="runtime-mode-badge" data-mode="demo">
                         <span class="nav-mode-dot"></span>
@@ -34,13 +34,11 @@
         </nav>
     </header>
 
-    <!-- 主工作区 -->
     <main class="main-content">
         <section class="workbench-section">
             <div class="planner-workbench">
-                <!-- 左侧图标导航 -->
                 <aside class="workbench-rail" aria-label="工作区导航">
-                    <button type="button" class="rail-btn is-active" aria-label="行程规划" title="行程规划" data-panel="planner">
+                    <button type="button" class="rail-btn is-active" aria-label="行程规划" title="行程规划" data-panel="planner" aria-current="page">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5L12 4L20 7.5V16.5L12 20L4 16.5V7.5Z" stroke="currentColor" stroke-width="1.8"/><path d="M12 4V20" stroke="currentColor" stroke-width="1.8"/><path d="M4 7.5L12 11L20 7.5" stroke="currentColor" stroke-width="1.8"/></svg>
                     </button>
                     <button type="button" class="rail-btn" aria-label="人物画像" title="人物画像" data-panel="persona">
@@ -54,20 +52,15 @@
                     </button>
                 </aside>
 
-                <!-- 左侧面板 -->
                 <aside class="workspace-sidebar">
-                    <!-- 行程设置面板 -->
                     <section class="sidebar-view active" data-panel-view="planner">
                         <form id="trip-form" class="sidebar-card planner-card">
                             <h3>行程设置</h3>
-                            
-                            <!-- 目的地（全宽） -->
                             <div class="form-group form-group-full">
                                 <label for="destination">目的地</label>
-                                <input type="text" id="destination" name="destination" placeholder="输入城市名称" value="南昌" required>
+                                <input type="text" id="destination" name="destination" placeholder="城市或大景区，如成都、武功山" value="南昌" required>
+                                <p class="form-hint">优先填城市/区域，多日行程更充实；单景点名候选较少。</p>
                             </div>
-
-                            <!-- 日期和预算（单行） -->
                             <div class="form-row">
                                 <div class="form-group flex-1">
                                     <label for="start-date">出发日期</label>
@@ -78,29 +71,57 @@
                                     <input type="number" id="budget" name="budget" min="0" step="100" value="3000" required>
                                 </div>
                             </div>
-
-                            <!-- 游玩天数（全宽） -->
                             <div class="form-group form-group-full">
                                 <label for="days">游玩天数：<span id="days-value">3</span> 天</label>
                                 <input type="range" id="days" name="days" min="1" max="7" value="3" oninput="updateDaysValue(this.value)">
                             </div>
-
-                            <button type="submit" class="btn btn-primary btn-lg">生成方案</button>
+                            <button type="submit" class="btn btn-primary btn-lg" id="trip-submit-btn">生成方案</button>
                         </form>
 
                         <section class="sidebar-card system-status-card" id="system-status-card">
                             <h3>系统能力</h3>
-                            <p id="system-status-desc">检测中...</p>
+                            <p id="system-status-desc">等待状态</p>
                             <div class="capability-pills" id="stage-capability-pills"></div>
+                            <div class="system-service-alerts" id="system-service-alerts" hidden></div>
+                            <details class="config-advanced" id="config-advanced">
+                                <summary>
+                                    <span>本次会话 · API 密钥</span>
+                                    <span class="config-advanced-brief" id="config-brief-summary">未填写</span>
+                                </summary>
+                                <div class="config-advanced-body">
+                                    <p class="config-section-lead">先检查格式，Key 仅保存在当前会话，不会写入后端。</p>
+                                    <p class="config-required-banner" id="config-required-banner" hidden></p>
+                                    <div class="form-group form-group-full config-key-field">
+                                        <div class="config-key-field__head">
+                                            <label for="amap-key-input">高德地图 Key</label>
+                                            <a id="amap-doc-link" class="config-doc-link" href="https://lbs.amap.com/api/webservice/guide/create-project/get-key" target="_blank" rel="noopener">官方文档</a>
+                                        </div>
+                                        <input type="password" id="amap-key-input" class="config-input" placeholder="32 位十六进制 Key" autocomplete="off" spellcheck="false">
+                                        <p class="config-field-error" id="amap-key-error" hidden></p>
+                                        <p class="config-hint" id="amap-config-hint">高德地图 Key 未填写，请补充。</p>
+                                    </div>
+                                    <div class="form-group form-group-full config-key-field">
+                                        <div class="config-key-field__head">
+                                            <label for="bailian-key-input">百炼 Key</label>
+                                            <a id="bailian-doc-link" class="config-doc-link" href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank" rel="noopener">官方文档</a>
+                                        </div>
+                                        <input type="password" id="bailian-key-input" class="config-input" placeholder="请输入 sk- 开头的百炼密钥" autocomplete="off" spellcheck="false">
+                                        <p class="config-field-error" id="bailian-key-error" hidden></p>
+                                        <p class="config-hint" id="bailian-config-hint">百炼 Key 未填写，请补充。</p>
+                                    </div>
+                                    <div class="form-actions config-keys-actions">
+                                        <button type="button" class="btn btn-primary btn-sm btn-config-save-full" id="save-config-btn" title="保存到当前浏览器会话">保存</button>
+                                    </div>
+                                </div>
+                            </details>
                         </section>
                     </section>
 
-                    <!-- 人物画像面板 -->
                     <section class="sidebar-view" data-panel-view="persona">
                         <section class="sidebar-card persona-card">
                             <div class="persona-summary">
                                 <div class="persona-avatar">
-                                    <img src="assets/persona-avatar.svg?v=2" alt="">
+                                    <img src="assets/persona-avatar.svg?v=7" alt="旅行者头像">
                                 </div>
                                 <div>
                                     <h3 id="persona-name-display">旅行者</h3>
@@ -109,13 +130,10 @@
                             </div>
 
                             <form id="persona-form" class="persona-form">
-                                <!-- 姓名 -->
                                 <div class="form-group form-group-full">
-                                    <label for="persona-name">姓名</label>
-                                    <input type="text" id="persona-name" name="name" placeholder="输入您的称呼" value="旅行者">
+                                    <label for="persona-name">称呼</label>
+                                    <input type="text" id="persona-name" name="name" placeholder="输入你的称呼" value="旅行者">
                                 </div>
-
-                                <!-- 旅行风格 -->
                                 <div class="form-group form-group-full">
                                     <label for="persona-style">旅行风格</label>
                                     <select id="persona-style" name="travel_style">
@@ -126,32 +144,23 @@
                                         <option value="cultural">文化深度游</option>
                                     </select>
                                 </div>
-
-                                <!-- 体力水平 -->
                                 <div class="form-group form-group-full">
-                                    <label>体力水平：<span id="energy-value">中等</span></label>
-                                    <input type="range" id="persona-energy" name="energy_level" min="1" max="5" value="3" oninput="updateEnergyValue(this.value)">
-                                    <div class="range-labels">
+                                    <label for="persona-energy">体力水平：<span id="energy-value">适中</span></label>
+                                    <input type="range" id="persona-energy" name="energy_level" min="1" max="3" step="1" value="2" oninput="updateEnergyValue(this.value)">
+                                    <div class="range-labels range-labels--stamina">
                                         <span>轻松</span>
+                                        <span>适中</span>
                                         <span>充沛</span>
                                     </div>
                                 </div>
-
-                                <!-- 预算偏好 -->
                                 <div class="form-group form-group-full">
                                     <label for="persona-budget-preference">预算偏好</label>
                                     <select id="persona-budget-preference" name="budget_preference">
                                         <option value="economy">经济实惠</option>
                                         <option value="balanced" selected>平衡适中</option>
-                                        <option value="comfort">舒适优先</option>
-                                        <option value="luxury">豪华享受</option>
+                                        <option value="comfort">舒适品质</option>
+                                        <option value="luxury">高品质</option>
                                     </select>
-                                </div>
-
-                                <!-- 特殊需求 -->
-                                <div class="form-group form-group-full">
-                                    <label for="persona-notes">特殊需求（可选）</label>
-                                    <textarea id="persona-notes" name="notes" rows="2" placeholder="如：无障碍需求、饮食禁忌等"></textarea>
                                 </div>
                             </form>
 
@@ -162,76 +171,197 @@
                         </section>
                     </section>
 
-                    <!-- 景点识别面板 -->
                     <section class="sidebar-view" data-panel-view="vision">
                         <section class="sidebar-card vision-card">
                             <h3>景点识别</h3>
                             <div class="upload-area" id="upload-area">
                                 <input type="file" id="image-upload" accept="image/*" class="file-input">
                                 <div class="upload-content">
-                                    <span class="upload-icon">📷</span>
+                                    <svg class="upload-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="12" rx="3" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/></svg>
                                     <p>点击或拖拽上传图片</p>
                                 </div>
                             </div>
+                            <div id="preview-container" class="vision-preview-wrap">
+                                <img id="image-preview" class="vision-preview-img" alt="上传预览">
+                            </div>
+                            <div class="form-actions vision-form-actions">
+                                <button type="button" class="btn btn-primary" id="recognize-btn" disabled>开始识别</button>
+                            </div>
+                            <div id="vision-result" class="vision-result-wrap"></div>
                         </section>
                     </section>
 
-                    <!-- 导出面板 -->
                     <section class="sidebar-view" data-panel-view="export">
                         <section class="sidebar-card export-card">
                             <h3>导出报告</h3>
-                            <p>生成 PDF 格式的旅行方案报告</p>
-                            <button type="button" class="btn btn-primary btn-lg" id="export-pdf-btn">生成 PDF</button>
+                            <p class="export-lead">生成 PDF 报告并下载到本机。</p>
+                            <div class="export-actions-stack">
+                                <button type="button" class="btn btn-primary btn-lg" id="export-pdf-btn">生成 PDF</button>
+                            </div>
                         </section>
                     </section>
                 </aside>
 
-                <!-- 右侧结果展示区 -->
                 <section class="workspace-stage">
                     <div class="stage-topbar">
                         <div class="stage-topbar-brand">
-                            <img src="assets/brand-mark.svg?v=2" alt="">
+                            <img src="assets/brand-mark.svg?v=3" alt="结果预览">
                             <div>
                                 <strong>结果预览</strong>
                                 <span id="result-status">等待生成</span>
                             </div>
                         </div>
                         <div class="stage-topbar-actions">
-                            <span class="stage-pill is-muted" id="stage-mode-pill">体验模式</span>
+                            <span class="stage-pill is-muted" id="stage-task-pill">等待生成</span>
                         </div>
                     </div>
 
                     <div class="stage-body" id="stage-body">
-                        <!-- 空状态 -->
                         <div class="empty-stage" id="empty-stage">
                             <div class="empty-stage-hero">
                                 <div class="empty-stage-panel empty-stage-panel-main">
-                                    <span class="empty-stage-badge">Ready</span>
-                                    <h4>开始您的旅程</h4>
-                                    <p>填写左侧表单，点击"生成方案"按钮</p>
+                                    <span class="empty-stage-badge">就绪</span>
+                                    <h4>开始你的旅行规划</h4>
+                                    <p>填写左侧信息后即可生成方案。</p>
                                     <div class="empty-stage-tags">
                                         <span>智能规划</span>
-                                        <span>实时天气</span>
-                                        <span>预算分析</span>
+                                        <span>活动负荷装箱</span>
+                                        <span>天气研判</span>
+                                        <span>预算审查</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 结果区域（初始隐藏） -->
-                        <div class="result-section" id="result-section" style="display: none;">
+                        <div class="progress-section panel-hidden" id="progress-section">
+                            <div class="progress-container">
+                                <div class="progress-header">
+                                    <div class="progress-header-main">
+                                        <h3 id="progress-title">正在生成旅行方案...</h3>
+                                        <p class="progress-header-hint progress-header-hint--short">正在生成，可随时终止。</p>
+                                        <details class="progress-tech-hint">
+                                            <summary>并行与终止说明</summary>
+                                            <p class="config-section-lead">调研与美食并行；终止后在当前步骤边界收尾。</p>
+                                        </details>
+                                    </div>
+                                    <div class="progress-header-actions">
+                                        <button
+                                            type="button"
+                                            id="stop-generation-btn"
+                                            class="btn-stop-generation"
+                                            title="终止当前生成（在当前步骤边界停止）"
+                                        >
+                                            <span class="btn-stop-generation__glyph" aria-hidden="true"></span>
+                                            <span class="btn-stop-generation__label">终止生成</span>
+                                        </button>
+                                        <div class="progress-spinner" role="status" aria-label="正在生成"></div>
+                                    </div>
+                                </div>
+                                <div class="exec-flow-viz" id="exec-flow-viz">
+                                    <div class="exec-flow-viz-head">
+                                        <span class="exec-flow-viz-title">LangGraph 多 Agent 流水线</span>
+                                        <span class="exec-flow-viz-caption" id="exec-flow-caption">等待任务…</span>
+                                    </div>
+                                    <div class="exec-flow-nodes" role="list" aria-label="主图 Agent 流程（调研与美食在进入规划前并行）">
+                                        <div class="exec-flow-node" data-stage="intent" role="listitem" title="Intent Agent">意图</div>
+                                        <span class="exec-flow-arrow" aria-hidden="true">→</span>
+                                        <div class="exec-flow-parallel-group" role="group" aria-label="并行阶段：Research 与 Food">
+                                            <div class="exec-flow-node" data-stage="research" role="listitem" title="Research 子图（可与美食并行）">调研</div>
+                                            <span class="exec-flow-parallel-bar" aria-hidden="true">‖</span>
+                                            <div class="exec-flow-node" data-stage="food" role="listitem" title="Food Agent（可与调研并行）">美食</div>
+                                        </div>
+                                        <span class="exec-flow-arrow" aria-hidden="true">→</span>
+                                        <div class="exec-flow-node" data-stage="planner" role="listitem" title="Planner 子图（含 ReAct 循环）">规划</div>
+                                        <span class="exec-flow-arrow" aria-hidden="true">→</span>
+                                        <div class="exec-flow-node" data-stage="transport" role="listitem" title="Transport/Lodging">住行</div>
+                                        <span class="exec-flow-arrow" aria-hidden="true">→</span>
+                                        <div class="exec-flow-node" data-stage="budget" role="listitem" title="Budget Reviewer">预算</div>
+                                        <span class="exec-flow-arrow" aria-hidden="true">→</span>
+                                        <div class="exec-flow-node" data-stage="supervisor" role="listitem" title="Supervisor">审阅</div>
+                                    </div>
+                                    <details class="exec-flow-arch-details">
+                                        <summary>展开架构示意</summary>
+                                        <div class="exec-flow-arch-wrap">
+                                        <svg class="exec-flow-arch-svg" viewBox="0 0 548 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <defs>
+                                                <marker id="exec-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                                                    <polygon points="0 0, 8 4, 0 8" fill="#94a3b8"/>
+                                                </marker>
+                                                <marker id="exec-arr-dash" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                                                    <polygon points="0 0, 8 4, 0 8" fill="#cbd5e1"/>
+                                                </marker>
+                                            </defs>
+                                            <!-- 主流程：意图分流后并行调研与美食，再汇合进入后续线性阶段 -->
+                                            <rect x="4" y="52" width="54" height="24" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="31" y="68" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Intent</text>
+                                            <line x1="58" y1="64" x2="68" y2="64" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <line x1="68" y1="64" x2="68" y2="27" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="68" y1="64" x2="68" y2="93" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="68" y1="27" x2="86" y2="27" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <line x1="68" y1="93" x2="86" y2="93" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <rect x="88" y="16" width="66" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="121" y="31" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Research</text>
+                                            <rect x="88" y="82" width="52" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="114" y="97" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Food</text>
+                                            <line x1="154" y1="27" x2="178" y2="56" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="140" y1="93" x2="178" y2="72" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="178" y1="56" x2="178" y2="72" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="178" y1="64" x2="206" y2="64" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <rect x="208" y="53" width="58" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="237" y="68" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Planner</text>
+                                            <line x1="266" y1="64" x2="278" y2="64" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <rect x="280" y="53" width="54" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="307" y="68" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Transport</text>
+                                            <line x1="334" y1="64" x2="344" y2="64" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <rect x="346" y="53" width="46" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="369" y="68" text-anchor="middle" font-size="11" fill="#145c56" font-family="system-ui,sans-serif">Budget</text>
+                                            <line x1="392" y1="64" x2="402" y2="64" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#exec-arr)"/>
+                                            <rect x="404" y="53" width="42" height="22" rx="6" fill="#ecfdf5" stroke="#1f8c86" stroke-width="1.2"/>
+                                            <text x="425" y="68" text-anchor="middle" font-size="10" fill="#145c56" font-family="system-ui,sans-serif">Super</text>
+                                            <path d="M 425 78 Q 425 104 121 104 Q 72 104 72 44" fill="none" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#exec-arr-dash)"/>
+                                            <path d="M 425 78 Q 432 102 237 102 Q 237 88 237 76" fill="none" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#exec-arr-dash)"/>
+                                            <text x="274" y="118" text-anchor="middle" font-size="9.5" fill="#64748b" font-family="system-ui,sans-serif">Supervisor 未通过时可回到 Research / Planner（虚线）</text>
+                                        </svg>
+                                        </div>
+                                    </details>
+                                </div>
+                                <details class="exec-timeline-panel" id="exec-timeline">
+                                    <summary class="exec-timeline-panel__summary">
+                                        <span>执行明细</span>
+                                        <span class="exec-timeline-panel__hint" id="exec-timeline-hint">各 Agent 内部步骤</span>
+                                    </summary>
+                                    <div class="exec-timeline-toolbar">
+                                        <label class="exec-timeline-toggle">
+                                            <input type="checkbox" id="exec-timeline-show-pending" />
+                                            显示待执行步骤
+                                        </label>
+                                    </div>
+                                    <div id="exec-timeline-list" class="exec-timeline-list" aria-live="polite"></div>
+                                </details>
+                                <div class="progress-messages" id="progress-messages">
+                                    <div class="progress-message">正在初始化任务...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-section panel-hidden" id="result-section">
                             <div class="stage-header">
                                 <h3 id="result-title">旅行方案</h3>
-                                <p id="result-subtitle">已为您生成个性化行程</p>
+                                <p id="result-subtitle">已生成方案</p>
                             </div>
-
-                            <div class="stage-overview-grid" id="stage-overview-grid">
-                                <!-- 动态内容 -->
+                            <div class="stage-overview-grid" id="stage-overview-grid"></div>
+                            <div class="silk-nav-dock panel-hidden" id="silk-nav-dock">
+                                <nav class="silk-nav" id="result-section-nav" aria-label="方案导航">
+                                    <span class="silk-nav__glow" aria-hidden="true"></span>
+                                    <span class="silk-nav__sheen" aria-hidden="true"></span>
+                                    <div class="silk-nav__body">
+                                        <span class="silk-nav__indicator" id="silk-nav-indicator" aria-hidden="true"></span>
+                                        <div class="silk-nav__scroll" id="silk-nav-scroll"></div>
+                                    </div>
+                                </nav>
+                                <div class="silk-nav-dock__hem" aria-hidden="true"></div>
                             </div>
-
-                            <div class="stage-sections" id="stage-sections">
-                                <!-- 每日行程、天气、预算等 -->
-                            </div>
+                            <div class="stage-sections" id="stage-sections"></div>
                         </div>
                     </div>
                 </section>
@@ -239,9 +369,45 @@
         </section>
     </main>
 
-    <script src="js/api.js?v=2"></script>
-    <script src="js/utils/helpers.js?v=2"></script>
-    <script src="js/utils/state.js?v=2"></script>
-    <script src="js/app.js?v=2"></script>
+    <div class="route-map-modal hidden" id="route-map-modal" aria-hidden="true">
+        <div class="route-map-modal-backdrop" onclick="closeRouteMapModal()"></div>
+        <div class="route-map-modal-panel">
+            <div class="route-map-modal-head">
+                <div>
+                    <strong id="route-map-modal-title">路线地图</strong>
+                    <p id="route-map-modal-caption">滚轮缩放 · 放大后可左键拖动 · 双击适应窗口</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeRouteMapModal()">关闭</button>
+            </div>
+            <div class="route-map-modal-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="openRouteMapInNewTab()">新窗口打开</button>
+            </div>
+            <div class="route-map-modal-body">
+                <div class="route-map-modal-zoom-wrap" id="route-map-modal-zoom-wrap" tabindex="-1" title="滚轮缩放，左键拖动">
+                    <div class="route-map-pan-stage" id="route-map-pan-stage">
+                        <img id="route-map-modal-image" alt="路线地图大图预览" decoding="async" draggable="false">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.__SMART_TRAVEL_CONFIG = {
+            apiBaseUrl: "__API_BASE_URL__",
+        };
+    </script>
+    <script src="js/api.js?v=11"></script>
+    <script src="js/utils/helpers.js?v=8"></script>
+    <script src="js/utils/state.js?v=3"></script>
+    <script src="js/runtime-config/key-registry.js?v=1"></script>
+    <script src="js/runtime-config/key-validator.js?v=1"></script>
+    <script src="js/runtime-config/service-errors.js?v=1"></script>
+    <script src="js/runtime-config/session-keys.js?v=1"></script>
+    <script src="js/runtime-config/controller.js?v=1"></script>
+    <script src="js/exec-flow-viz.js?v=4"></script>
+    <script src="js/exec-timeline.js?v=2"></script>
+    <script src="js/persona-panel.js?v=1"></script>
+    <script src="js/app.js?v=48"></script>
 </body>
 </html>

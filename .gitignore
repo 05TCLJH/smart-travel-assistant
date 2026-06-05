@@ -21,3 +21,5 @@ data/reports/*.jpg
 *.db
 
 *.log
+
+tmp_report.pdf

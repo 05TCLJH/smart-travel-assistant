@@ -35,13 +35,15 @@ def _sample_trip_result() -> dict:
 
 
 def test_report_service_generates_pdf_in_memory() -> None:
-    report = ReportService().generate(_sample_trip_result())
+    service = ReportService()
+    report = service.generate(_sample_trip_result())
 
     assert report.filename.startswith("travel_report_")
     assert report.filename.endswith(".pdf")
     assert report.content.startswith(b"%PDF")
     assert len(report.content) > 100
-    assert b"NotoSansSC" in report.content or b"STSong-Light" in report.content
+    assert service.font_name in {"TravelReportCn-Regular", "STSong-Light"}
+    assert b"ToUnicode" in report.content or b"/BaseFont" in report.content
 
 
 def test_report_export_endpoint_returns_pdf_attachment() -> None:
