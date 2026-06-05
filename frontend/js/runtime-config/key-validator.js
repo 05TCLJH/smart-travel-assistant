@@ -4,7 +4,7 @@
 const RuntimeKeyValidator = (() => {
     function getFieldLabel(specId) {
         if (specId === 'amap_api_key') return '高德地图 Key';
-        if (specId === 'bailian_api_key') return 'DashScope API Key';
+        if (specId === 'bailian_api_key') return '百炼 Key';
         return 'API Key';
     }
 
@@ -17,7 +17,7 @@ const RuntimeKeyValidator = (() => {
             return '高德地图 Key 格式不正确，请检查是否包含空格、引号或复制不完整。';
         }
         if (specId === 'bailian_api_key') {
-            return 'DashScope API Key 格式不正确，请检查是否以 sk- 开头，以及后续字符长度和内容是否正确。';
+            return '百炼 Key 格式不正确，请检查是否以 sk- 开头，以及后续字符长度和内容是否正确。';
         }
         return 'API Key 格式不正确，请检查后重试。';
     }

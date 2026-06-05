@@ -37,7 +37,7 @@ const RuntimeKeyRegistry = (() => {
             },
             bailian_api_key: {
                 id: 'bailian_api_key',
-                label: '百炼 / DashScope API Key',
+                label: '百炼 Key',
                 pattern: '^sk-[0-9a-fA-F]{32}$',
                 format_hint: '以 sk- 开头，后接 32 位十六进制',
                 doc_url: 'https://help.aliyun.com/zh/model-studio/get-api-key',

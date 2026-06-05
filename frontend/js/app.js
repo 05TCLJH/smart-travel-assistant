@@ -61,7 +61,7 @@ function describeKeyStatus(specId, rawValue) {
         return {
             status: 'missing',
             label,
-            message: specId === 'bailian_api_key' ? 'DashScope API Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。',
+            message: specId === 'bailian_api_key' ? '百炼 Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。',
         };
     }
     const result = RuntimeKeyValidator.validate(specId, raw);
@@ -1135,7 +1135,7 @@ function updateSystemUI(status) {
     renderSystemServiceAlerts();
     if (pills) pills.innerHTML = [
         { label: (status.trip_live_enabled || sessionState.has_amap) ? '实时地图' : '演示地图', live: !!(status.trip_live_enabled || sessionState.has_amap) },
-        { label: (status.vision_enabled || sessionState.has_bailian) ? '景点识别可用' : '景点识别未启用', live: !!(status.vision_enabled || sessionState.has_bailian) },
+        { label: (status.vision_enabled || sessionState.has_bailian) ? '景点识别可用' : '景点识别不可用', live: !!(status.vision_enabled || sessionState.has_bailian) },
         { label: status.report_enabled ? 'PDF 可导出' : 'PDF 未启用', live: !!status.report_enabled },
     ].map((item) => `<span class="capability-pill ${item.live ? 'is-live' : 'is-demo'}">${escapeHtml(item.label)}</span>`).join('');
 }
@@ -1216,6 +1216,17 @@ function renderSystemServiceAlerts() {
             </article>
         `;
     }).join('');
+}
+
+function showLoading(show) {
+    const submitBtn = document.getElementById('trip-submit-btn');
+    if (!submitBtn) return;
+    if (!submitBtn.dataset.defaultText) {
+        submitBtn.dataset.defaultText = submitBtn.textContent || '生成方案';
+    }
+    submitBtn.disabled = !!show;
+    submitBtn.classList.toggle('is-loading', !!show);
+    submitBtn.textContent = show ? '生成中...' : submitBtn.dataset.defaultText;
 }
 
 function showProgressUI(show) {

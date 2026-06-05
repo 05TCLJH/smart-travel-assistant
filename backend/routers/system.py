@@ -66,26 +66,26 @@ def _build_status_payload() -> dict[str, object]:
     mode = "hybrid" if has_backend_key_configured() else "demo"
 
     notes = [
-        "BYOK keys stay in the current browser session and are only copied into short-lived runtime task records while a background job is executing.",
-        "Queued trip tasks now run from shared runtime state instead of the request worker, so SSE/result polling can survive normal worker handoff.",
-        "This deployment profile is designed for a single public app instance with short-lived runtime state, which matches a typical Hugging Face Space setup.",
+        "本次会话填写的密钥只保存在当前浏览器中，执行任务时才会临时带入运行链路，不会写入长期后端配置。",
+        "排队中的行程任务运行在共享运行时状态中，因此进度流和结果查询不依赖单个请求进程。",
+        "当前部署形态面向单个公网实例，适合 Hugging Face Space 这类短时运行状态环境。",
     ]
     if mode == "demo":
-        notes.append("Live map or vision features require the user to provide their own keys in the current session.")
+        notes.append("实时地图和景点识别能力需要你在当前会话中提供自己的密钥。")
     else:
-        notes.append("Backend environment keys can still be used as a fallback, but per-session keys override them for the current runtime chain.")
+        notes.append("后端环境变量中的密钥仍可作为兜底，但当前会话填写的密钥会优先生效。")
     if trip_live_enabled:
-        notes.append("Map, weather, and POI data prefer Amap-backed live services when a key is available.")
+        notes.append("已检测到可用高德能力，地图、天气和 POI 会优先走实时服务。")
     else:
-        notes.append("Amap live features are disabled, so map and weather views may fall back to local/demo data.")
+        notes.append("高德实时能力未启用，地图和天气可能会回退到本地或演示数据。")
     if travel_context_mcp_enabled():
-        notes.append("Travel Context MCP is enabled behind deployment-level authorization and runtime-owner isolation.")
+        notes.append("Travel Context MCP 已启用，并受部署级鉴权与运行时隔离保护。")
     else:
-        notes.append("Travel Context MCP is disabled by default to avoid exposing internal planning context.")
+        notes.append("Travel Context MCP 默认关闭，以避免暴露内部规划上下文。")
     if vision_enabled:
-        notes.append("Vision recognition is enabled.")
+        notes.append("景点识别能力已启用。")
     else:
-        notes.append("Vision recognition is unavailable until a Bailian/Qwen key is provided.")
+        notes.append("尚未检测到可用百炼密钥，景点识别能力暂不可用。")
     return {
         "app_mode": mode,
         "trip_live_enabled": trip_live_enabled,
@@ -108,7 +108,7 @@ async def save_runtime_config(payload: RuntimeConfigPayload) -> dict:
     if amap_value is None and bailian_value is None:
         return success_response(
             {"runtime_config": get_runtime_config(), "session_only": True},
-            "BYOK validation completed. Keys are not written into long-lived backend config.",
+            "会话密钥校验完成，密钥不会写入长期后端配置。",
         )
 
     validation_issues = validate_runtime_key_updates(
@@ -121,7 +121,7 @@ async def save_runtime_config(payload: RuntimeConfigPayload) -> dict:
                 "runtime_config": get_runtime_config(),
                 "validation_errors": issues_to_field_map(validation_issues),
             },
-            "Key format validation failed.",
+            "密钥格式校验未通过。",
         )
 
     updated: list[str] = []
@@ -136,32 +136,32 @@ async def save_runtime_config(payload: RuntimeConfigPayload) -> dict:
             "session_only": True,
             "validated": updated,
         },
-        f"Validated keys: {', '.join(updated)}",
+        f"已完成校验：{', '.join(updated)}",
     )
 
 
 @router.get("/status")
 async def status(request: Request) -> JSONResponse:
-    response = JSONResponse(success_response(_build_status_payload(), "System status loaded"))
+    response = JSONResponse(success_response(_build_status_payload(), "系统状态已加载"))
     ensure_runtime_owner(request, response)
     return response
 
 
 @router.get("/runtime-config")
 async def runtime_config() -> dict:
-    return success_response(get_runtime_config(), "Runtime config loaded")
+    return success_response(get_runtime_config(), "运行时配置已加载")
 
 
 @router.get("/key-specs")
 async def key_specs() -> dict:
-    return success_response({"specs": list_key_specs_public()}, "Key specs loaded")
+    return success_response({"specs": list_key_specs_public()}, "密钥规范已加载")
 
 
 @router.get("/progress-catalog")
 async def progress_catalog() -> dict:
     from backend.runtime.progress_catalog import list_steps_public
 
-    return success_response({"steps": list_steps_public()}, "Progress catalog loaded")
+    return success_response({"steps": list_steps_public()}, "进度目录已加载")
 
 
 @router.post("/classify-failure")

@@ -44,7 +44,7 @@ const RuntimeServiceErrors = (() => {
                 service: 'bailian',
                 code: 'bailian_key_invalid',
                 title: '百炼 Key 不可用',
-                message: 'DashScope API Key 格式正确，但当前不可用，请检查是否有效、是否已失效、是否有权限或是否已超出额度。',
+                message: '百炼 Key 格式正确，但当前不可用，请检查是否有效、是否已失效、是否有权限或是否已超出额度。',
                 doc_url: BAILIAN_DOC,
             };
         }
@@ -54,7 +54,7 @@ const RuntimeServiceErrors = (() => {
                 service: 'bailian',
                 code: 'bailian_not_configured',
                 title: '百炼 Key 未配置',
-                message: 'DashScope API Key 暂时无法验证可用性，请稍后重试。',
+                message: '百炼 Key 暂时无法验证可用性，请稍后重试。',
                 doc_url: BAILIAN_DOC,
             };
         }
@@ -65,7 +65,7 @@ const RuntimeServiceErrors = (() => {
                 code: 'bailian_network_ssl',
                 title: '视觉模型连接中断',
                 message:
-                    '与 DashScope 的 HTTPS 连接在传输时被中断。请将图片压缩到 4MB 以内（建议 JPG）、检查代理/防火墙，或稍后重试。',
+                    '与百炼服务的 HTTPS 连接在传输时被中断。请将图片压缩到 4MB 以内，检查代理或防火墙后重试。',
                 doc_url: BAILIAN_DOC,
             };
         }

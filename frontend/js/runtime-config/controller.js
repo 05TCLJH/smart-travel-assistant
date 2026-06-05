@@ -67,7 +67,7 @@ const RuntimeConfigController = (() => {
                 label: spec.label,
                 status: 'missing',
                 valid: false,
-                message: specId === 'bailian_api_key' ? 'DashScope API Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。',
+                message: specId === 'bailian_api_key' ? '百炼 Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。',
             };
         }
         const result = RuntimeKeyValidator.validate(specId, raw);
@@ -90,10 +90,14 @@ const RuntimeConfigController = (() => {
         };
     }
 
+    function getBlockingIssues(snapshot) {
+        return Object.values(snapshot || {}).filter((item) => item && item.status !== 'valid');
+    }
+
     function formatValidationIssues(snapshot) {
-        return Object.values(snapshot || {})
-            .filter((item) => item && item.status === 'invalid')
+        return getBlockingIssues(snapshot)
             .map((item) => item.message)
+            .filter(Boolean)
             .join('；');
     }
 
@@ -115,55 +119,29 @@ const RuntimeConfigController = (() => {
 
     function renderRequiredBanner(state) {
         const snapshot = getKeyValidationSnapshot(state);
-        const anyFilled = Boolean(state?.has_any);
-        const invalidMessages = formatValidationIssues(snapshot);
-        if (invalidMessages) {
-            setRequiredBanner('请先修正标红的 Key。', 'error');
-            return;
-        }
-        if (!anyFilled) {
-            setRequiredBanner('未填写 Key，请先补充。', 'error');
-            return;
-        }
         if (snapshot.amap.valid && snapshot.bailian.valid) {
-            setRequiredBanner('Key 已保存到当前浏览器。', 'ready');
+            setRequiredBanner('高德地图 Key 和百炼 Key 已就绪，可以生成方案。', 'ready');
             return;
         }
-        if (snapshot.amap.valid && !snapshot.bailian.valid) {
-            setRequiredBanner('行程方案可继续生成；DashScope API Key 用于 LLM 增强和图片识别。', 'warning');
-            return;
-        }
-        if (!snapshot.amap.valid && snapshot.bailian.valid) {
-            setRequiredBanner('高德地图 Key 未填写，请补充。', 'error');
-            return;
-        }
-        setRequiredBanner('请先检查当前 Key。', 'warning');
+        setRequiredBanner(formatValidationIssues(snapshot) || '请同时填写高德地图 Key 和百炼 Key，才能生成方案。', 'error');
     }
 
     function requireKeysForFeature(feature) {
-        const state = RuntimeSessionKeys.getState();
-        const snapshot = getKeyValidationSnapshot(state);
+        const snapshot = getKeyValidationSnapshot(RuntimeSessionKeys.getState());
         const featureName = String(feature || '').trim();
-        const invalidMessages = formatValidationIssues(snapshot);
-        if (invalidMessages) {
-            if (!snapshot.amap.valid) setFieldError('amap_api_key', snapshot.amap.message);
-            if (!snapshot.bailian.valid) setFieldError('bailian_api_key', snapshot.bailian.message);
-            setRequiredBanner('请先修正标红的 Key。', 'error');
-            showNotification(invalidMessages, 'error', 7000);
-            return false;
-        }
         if (featureName === 'trip') {
-            if (snapshot.amap.valid) return true;
-            setFieldError('amap_api_key', '高德地图 Key 未填写，请补充。');
-            setRequiredBanner('高德地图 Key 未填写，请补充。', 'error');
-            showNotification('高德地图 Key 未填写，请补充。', 'error', 7000);
+            if (snapshot.amap.valid && snapshot.bailian.valid) return true;
+            getBlockingIssues(snapshot).forEach((item) => setFieldError(item.specId, item.message));
+            const message = formatValidationIssues(snapshot) || '请同时填写高德地图 Key 和百炼 Key，才能生成方案。';
+            setRequiredBanner(message, 'error');
+            showNotification(message, 'error', 7000);
             return false;
         }
         if (featureName === 'vision') {
             if (snapshot.bailian.valid) return true;
-            setFieldError('bailian_api_key', 'DashScope API Key 未填写，请补充。');
-            setRequiredBanner('DashScope API Key 未填写，请补充。', 'error');
-            showNotification('DashScope API Key 未填写，请补充。', 'error', 7000);
+            setFieldError('bailian_api_key', snapshot.bailian.message);
+            setRequiredBanner(snapshot.bailian.message, 'error');
+            showNotification(snapshot.bailian.message, 'error', 7000);
             return false;
         }
         return true;
@@ -177,23 +155,21 @@ const RuntimeConfigController = (() => {
         });
     }
 
-    function renderHints(runtimeConfig) {
+    function renderHints() {
         const amapSpec = RuntimeKeyRegistry.getSpec('amap_api_key');
         const bailianSpec = RuntimeKeyRegistry.getSpec('bailian_api_key');
         const amapHint = document.getElementById('amap-config-hint');
         const bailianHint = document.getElementById('bailian-config-hint');
         const state = RuntimeSessionKeys.getState();
-        const amapMasked = shortenMaskedSecret(state.amap_api_key || '');
-        const bailianMasked = shortenMaskedSecret(state.bailian_api_key || '');
         const snapshot = getKeyValidationSnapshot(state);
 
         if (amapHint) {
-            const text = buildFieldHintText(amapSpec, snapshot.amap, amapMasked);
+            const text = buildFieldHintText(amapSpec, snapshot.amap);
             amapHint.textContent = text;
             amapHint.hidden = !text;
         }
         if (bailianHint) {
-            const text = buildFieldHintText(bailianSpec, snapshot.bailian, bailianMasked);
+            const text = buildFieldHintText(bailianSpec, snapshot.bailian);
             bailianHint.textContent = text;
             bailianHint.hidden = !text;
         }
@@ -202,12 +178,12 @@ const RuntimeConfigController = (() => {
         renderDocLinks();
     }
 
-    function buildFieldHintText(spec, snapshot, maskedValue) {
+    function buildFieldHintText(spec, snapshot) {
         if (snapshot.status === 'valid') {
-            return spec?.id === 'bailian_api_key' ? 'DashScope API Key 校验通过。' : '高德地图 Key 校验通过。';
+            return spec?.id === 'bailian_api_key' ? '百炼 Key 校验通过。' : '高德地图 Key 校验通过。';
         }
         if (snapshot.status === 'missing') {
-            return spec?.id === 'bailian_api_key' ? 'DashScope API Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。';
+            return spec?.id === 'bailian_api_key' ? '百炼 Key 未填写，请补充。' : '高德地图 Key 未填写，请补充。';
         }
         return '';
     }
@@ -221,35 +197,28 @@ const RuntimeConfigController = (() => {
         });
     }
 
-    function shortenMaskedSecret(value) {
-        const text = String(value || '').trim();
-        if (!text || text.length <= 14) return text;
-        return `${text.slice(0, 4)}...${text.slice(-4)}`;
-    }
-
     async function save() {
         const payload = RuntimeSessionKeys.syncStorageFromInputs();
-
         if (!payload.has_any) {
-            renderHints({});
+            renderHints();
             if (typeof window.updateConfigBriefSummary === 'function') {
                 window.updateConfigBriefSummary(window.getSystemStatus?.() || null);
             }
-            showNotification('本次会话 Key 已清空', 'info');
+            showNotification('本次会话 Key 已清空。', 'info');
             return;
         }
 
         const clientErrors = RuntimeKeyValidator.validatePayload(RuntimeSessionKeys.buildRequestPayload(payload));
         if (Object.keys(clientErrors).length) {
             applyServerValidationErrors(clientErrors);
-            const message = formatValidationIssues(getKeyValidationSnapshot(payload)) || '请先修正 Key。';
-            setRequiredBanner('请先修正标红的 Key。', 'error');
+            const message = Object.values(clientErrors).map((item) => item?.message).filter(Boolean).join('；') || '请先修正 Key。';
+            setRequiredBanner(message, 'error');
             showNotification(message, 'error', 7000);
             return;
         }
 
         clearAllFieldErrors();
-        renderHints({});
+        renderHints();
         if (typeof window.updateConfigBriefSummary === 'function') {
             window.updateConfigBriefSummary(window.getSystemStatus?.() || null);
         }
@@ -257,7 +226,7 @@ const RuntimeConfigController = (() => {
             const status = window.getSystemStatus();
             if (status) window.updateSystemUI(status);
         }
-        showNotification('Key 已保存到当前浏览器。', 'info', 5000);
+        showNotification('Key 已保存到当前浏览器会话。', 'info', 5000);
     }
 
     async function init() {
@@ -269,7 +238,7 @@ const RuntimeConfigController = (() => {
         bindField('bailian_api_key');
         const saveBtn = document.getElementById('save-config-btn');
         if (saveBtn) saveBtn.addEventListener('click', () => save());
-        renderHints({});
+        renderHints();
         if (typeof window.updateConfigBriefSummary === 'function') {
             window.updateConfigBriefSummary(window.getSystemStatus?.() || null);
         }

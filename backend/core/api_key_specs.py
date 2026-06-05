@@ -59,7 +59,7 @@ AMAP_KEY_SPEC = ApiKeySpec(
 
 BAILIAN_KEY_SPEC = ApiKeySpec(
     id="bailian_api_key",
-    label="百炼 / DashScope API Key",
+    label="百炼 Key",
     env_names=("ALIYUN_BAILIAN_API_KEY", "DASHSCOPE_API_KEY", "BAILIAN_API_KEY"),
     pattern=r"^sk-[0-9a-fA-F]{32}$",
     format_hint="以 sk- 开头，后接 32 位十六进制（示例：sk-xxxxxxxx…）",
@@ -86,7 +86,7 @@ def _field_display_name(spec: ApiKeySpec) -> str:
     if spec.id == AMAP_KEY_SPEC.id:
         return "高德地图 Key"
     if spec.id == BAILIAN_KEY_SPEC.id:
-        return "DashScope API Key"
+        return "百炼 Key"
     return spec.label
 
 
@@ -98,7 +98,7 @@ def _format_message(spec: ApiKeySpec) -> str:
     if spec.id == AMAP_KEY_SPEC.id:
         return "高德地图 Key 格式不正确，请检查是否包含空格、引号或复制不完整。"
     if spec.id == BAILIAN_KEY_SPEC.id:
-        return "DashScope API Key 格式不正确，请检查是否以 sk- 开头，以及后续字符长度和内容是否正确。"
+        return "百炼 Key 格式不正确，请检查是否以 sk- 开头，以及后续字符长度和内容是否正确。"
     return f"{_field_display_name(spec)} 格式不正确，请检查后重试。"
 
 
@@ -172,7 +172,7 @@ def classify_service_failure(message: str, *, hint: str | None = None) -> dict[s
             "service": "bailian",
             "code": "bailian_key_invalid",
             "title": "百炼 Key 不可用",
-            "message": "DashScope API Key 格式正确，但当前不可用，请检查是否有效、是否已失效、是否有权限或是否已超出额度。",
+            "message": "百炼 Key 格式正确，但当前不可用，请检查是否有效、是否已失效、是否有权限或是否已超出额度。",
             "doc_url": BAILIAN_KEY_SPEC.doc_url,
         }
 
@@ -183,7 +183,7 @@ def classify_service_failure(message: str, *, hint: str | None = None) -> dict[s
             "service": "bailian",
             "code": "bailian_not_configured",
             "title": "百炼 Key 未配置",
-            "message": "DashScope API Key 暂时无法验证可用性，请稍后重试。",
+            "message": "百炼 Key 暂时无法验证可用性，请稍后重试。",
             "doc_url": BAILIAN_KEY_SPEC.doc_url,
         }
 
@@ -194,7 +194,7 @@ def classify_service_failure(message: str, *, hint: str | None = None) -> dict[s
             "service": "bailian",
             "code": "bailian_network_ssl",
             "title": "视觉模型连接中断",
-            "message": "与 DashScope 的 HTTPS 连接在传输时被中断。请将图片压缩到 4MB 以内（建议 JPG）、检查代理/防火墙，或稍后重试。",
+            "message": "与百炼服务的 HTTPS 连接在传输时被中断。请将图片压缩到 4MB 以内，检查代理或防火墙后重试。",
             "doc_url": BAILIAN_KEY_SPEC.doc_url,
         }
 
