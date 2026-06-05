@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import importlib
 from pathlib import Path
+import socket
+import ssl
 import tempfile
 import time
 from typing import Iterator
@@ -10,12 +12,14 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
+from urllib.error import URLError
 
 from backend.core.runtime_context import runtime_keys_scope
 from backend.core.runtime_owner import RUNTIME_OWNER_COOKIE
 from backend.core import paths as core_paths
 from backend.main import create_app
 from backend.runtime.state_store import RuntimeStateStore, runtime_state_store
+from backend.routers.trip import _fetch_static_map_content, _safe_static_map_failure
 
 
 @pytest.fixture()
@@ -191,6 +195,49 @@ def test_static_map_errors_do_not_echo_runtime_key(isolated_runtime_store: Path,
     assert response.status_code == 200
     assert "0123456789abcdef0123456789abcdef" not in response.text
     assert "Static map request failed unexpectedly." in response.text
+
+
+def test_safe_static_map_failure_reports_timeout() -> None:
+    message = _safe_static_map_failure(URLError(socket.timeout("timed out")))
+    assert message == "Static map service timed out."
+
+
+def test_safe_static_map_failure_reports_ssl_handshake() -> None:
+    message = _safe_static_map_failure(URLError(ssl.SSLError("tlsv1 alert internal error")))
+    assert message == "Static map SSL handshake failed."
+
+
+def test_fetch_static_map_content_retries_retryable_network_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts: list[int] = []
+
+    class _FakeResponse:
+        def __init__(self, content: bytes, content_type: str) -> None:
+            self._content = content
+            self.headers = {"Content-Type": content_type}
+
+        def read(self) -> bytes:
+            return self._content
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb) -> None:
+            return None
+
+    def _fake_urlopen(request, timeout=0):
+        attempts.append(timeout)
+        if len(attempts) == 1:
+            raise URLError(socket.timeout("timed out"))
+        return _FakeResponse(b"png-bytes", "image/png")
+
+    monkeypatch.setattr("backend.routers.trip.urlopen", _fake_urlopen)
+    monkeypatch.setattr("backend.routers.trip.time.sleep", lambda *_args, **_kwargs: None)
+
+    content, content_type = _fetch_static_map_content("https://example.com/static-map")
+
+    assert content == b"png-bytes"
+    assert content_type == "image/png"
+    assert len(attempts) == 2
 
 
 def test_travel_context_mcp_is_disabled_by_default(isolated_runtime_store: Path) -> None:

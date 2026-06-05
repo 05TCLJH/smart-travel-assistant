@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+import socket
+import ssl
+import time
 import uuid
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -81,8 +84,50 @@ def _safe_static_map_failure(exc: Exception) -> str:
     if isinstance(exc, HTTPError):
         return f"Static map service returned HTTP {exc.code}."
     if isinstance(exc, URLError):
-        return "Static map service is temporarily unreachable."
+        reason = exc.reason
+        if isinstance(reason, socket.timeout | TimeoutError):
+            return "Static map service timed out."
+        if isinstance(reason, socket.gaierror):
+            return "Static map DNS lookup failed."
+        if isinstance(reason, ssl.SSLError):
+            return "Static map SSL handshake failed."
+        if isinstance(reason, ConnectionResetError):
+            return "Static map connection was reset by the remote host."
+        if isinstance(reason, ConnectionRefusedError):
+            return "Static map connection was refused."
+        if isinstance(reason, OSError):
+            detail = str(reason).strip()
+            return f"Static map network error: {detail}" if detail else "Static map network error."
+        detail = str(reason).strip()
+        return f"Static map service is temporarily unreachable: {detail}" if detail else "Static map service is temporarily unreachable."
     return "Static map request failed unexpectedly."
+
+
+def _is_retryable_static_map_error(exc: Exception) -> bool:
+    if isinstance(exc, HTTPError):
+        return int(exc.code) >= 500
+    if not isinstance(exc, URLError):
+        return False
+    reason = exc.reason
+    if isinstance(reason, socket.timeout | TimeoutError | socket.gaierror | ssl.SSLError):
+        return True
+    return isinstance(reason, OSError)
+
+
+def _fetch_static_map_content(static_map_url: str, *, attempts: int = 2, timeout: int = 15) -> tuple[bytes, str]:
+    remote_request = Request(static_map_url, headers={"User-Agent": "smart-travel-assistant/3.0"})
+    last_exc: Exception | None = None
+    for attempt in range(1, max(1, attempts) + 1):
+        try:
+            with urlopen(remote_request, timeout=timeout) as remote:
+                return remote.read(), remote.headers.get("Content-Type", "image/png")
+        except Exception as exc:
+            last_exc = exc
+            if attempt >= attempts or not _is_retryable_static_map_error(exc):
+                break
+            time.sleep(0.25)
+    assert last_exc is not None
+    raise last_exc
 
 
 @router.post("/plan")
@@ -331,10 +376,7 @@ async def get_static_map(
 
     static_map_url = f"https://restapi.amap.com/v3/staticmap?{urlencode(params)}"
     try:
-        remote_request = Request(static_map_url, headers={"User-Agent": "smart-travel-assistant/3.0"})
-        with urlopen(remote_request, timeout=15) as remote:
-            content = remote.read()
-            content_type = remote.headers.get("Content-Type", "image/png")
+        content, content_type = _fetch_static_map_content(static_map_url)
         if "json" in content_type.lower():
             try:
                 payload = json.loads(content.decode("utf-8"))
