@@ -131,9 +131,9 @@ class PersonaService:
     def _infer_transport_preference(persona: dict[str, Any], budget: float) -> str:
         budget_style = str(persona.get("budget_style", "")).strip()
         stamina = str(persona.get("stamina", "")).strip()
-        if budget_style in {"缁忔祹", "economy"} or budget < 1200:
+        if budget_style in {"经济", "economy"} or budget < 1200:
             return "地铁/公交优先"
-        if stamina == "杞绘澗":
+        if stamina == "轻松":
             return "地铁/公交优先"
         return "打车/网约车优先"
 
