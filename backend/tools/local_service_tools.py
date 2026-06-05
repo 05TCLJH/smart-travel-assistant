@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import math
+import re
 from typing import Any
 
 from backend.planning.budget_style import lodging_fallback_types, lodging_search_keywords, normalize_budget_style
+from backend.tools.amap_geocode import extract_destination_scope, extract_geocode_location
 from backend.tools.amap_tools import TravelResearchTools, safe_float, safe_int
 from backend.tools.grounding_tools import is_auxiliary_poi
 
@@ -48,14 +50,17 @@ class LocalServiceTools:
         self.amap = research_tools.amap
 
     def search_local_foods(self, destination: str, persona: dict[str, Any], limit: int = 6) -> list[dict[str, Any]]:
-        anchor = self._resolve_destination_anchor(destination)
+        scope = self._resolve_destination_scope(destination)
+        anchor = scope.get("anchor")
         if self.amap.enabled:
             queries = self._food_queries(destination)
             foods = self._search_local_places(
                 destination=destination,
+                city_ref=str(scope.get("city_ref", "")).strip() or destination,
                 queries=queries,
                 anchor=anchor,
                 limit=limit,
+                around_types="050000",
                 normalizer=lambda rows: self._normalize_food_rows(rows, destination, anchor),
             )
             if foods:
@@ -70,7 +75,8 @@ class LocalServiceTools:
         plan: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
         budget_style = normalize_budget_style(budget_style)
-        anchor = self._resolve_destination_anchor(destination)
+        scope = self._resolve_destination_scope(destination)
+        anchor = scope.get("anchor")
         if self.amap.enabled:
             hotels = self._search_lodgings_by_zone(destination, budget_style, anchor, plan, limit)
             if hotels:
@@ -78,9 +84,11 @@ class LocalServiceTools:
             queries = self._lodging_queries(destination, budget_style, plan)
             hotels = self._search_local_places(
                 destination=destination,
+                city_ref=str(scope.get("city_ref", "")).strip() or destination,
                 queries=queries,
                 anchor=anchor,
                 limit=limit,
+                around_types="100000",
                 normalizer=lambda rows: self._normalize_lodging_rows(rows, destination, anchor, budget_style),
             )
             if hotels:
@@ -204,38 +212,104 @@ class LocalServiceTools:
     def _search_local_places(
         self,
         destination: str,
+        city_ref: str,
         queries: list[str],
         anchor: tuple[float, float] | None,
         limit: int,
+        around_types: str,
         normalizer,
     ) -> list[dict[str, Any]]:
         merged: list[dict[str, Any]] = []
         seen: set[str] = set()
+        anchor_text = f"{anchor[0]},{anchor[1]}" if anchor else ""
+        city_candidates = [str(city_ref or "").strip(), str(destination or "").strip(), ""]
         for query in queries:
-            try:
-                rows = self.amap.text_search(query, city=destination).get("pois", [])
-            except Exception:
-                continue
-            for item in normalizer(rows):
-                name = str(item.get("name", "")).strip()
-                if not name or name in seen:
-                    continue
-                seen.add(name)
-                merged.append(item)
-                if len(merged) >= limit * 2:
-                    return merged
+            variants = [str(query or "").strip()]
+            prefixed = f"{destination}{query}".strip()
+            if prefixed and prefixed not in variants and destination not in str(query or ""):
+                variants.append(prefixed)
+            for variant in variants:
+                for city_arg in city_candidates:
+                    try:
+                        rows = self.amap.text_search(variant, city=city_arg).get("pois", [])
+                    except Exception:
+                        continue
+                    for item in normalizer(rows):
+                        name = str(item.get("name", "")).strip()
+                        if not name or name in seen:
+                            continue
+                        seen.add(name)
+                        merged.append(item)
+                        if len(merged) >= limit * 2:
+                            return merged
+                if anchor_text:
+                    try:
+                        rows = self.amap.around_search(variant, anchor_text, radius=8000, types=around_types).get("pois", [])
+                    except Exception:
+                        continue
+                    for item in normalizer(rows):
+                        name = str(item.get("name", "")).strip()
+                        if not name or name in seen:
+                            continue
+                        seen.add(name)
+                        merged.append(item)
+                        if len(merged) >= limit * 2:
+                            return merged
         return merged
 
-    def _resolve_destination_anchor(self, destination: str) -> tuple[float, float] | None:
+    def _resolve_destination_scope(self, destination: str) -> dict[str, Any]:
+        scope: dict[str, Any] = {
+            "destination": destination,
+            "resolved_name": destination,
+            "city_ref": destination,
+            "anchor": None,
+        }
         if not self.amap.enabled:
-            return None
+            return scope
         try:
             payload = self.amap.geocode(destination)
         except Exception:
-            return None
-        rows = payload.get("geocodes") or payload.get("results") or []
-        first = rows[0] if rows and isinstance(rows[0], dict) else {}
-        return self.research_tools.parse_lnglat(first.get("location", ""))
+            return scope
+
+        resolved_scope = extract_destination_scope(payload, destination)
+        location = extract_geocode_location(payload)
+        scope.update(resolved_scope)
+        scope["anchor"] = self.research_tools.parse_lnglat(location)
+        scope["city_ref"] = (
+            str(resolved_scope.get("adcode", "")).strip()
+            or str(resolved_scope.get("city", "")).strip()
+            or destination
+        )
+        return scope
+
+    def _resolve_destination_anchor(self, destination: str) -> tuple[float, float] | None:
+        return self._resolve_destination_scope(destination).get("anchor")
+
+    @staticmethod
+    def _clean_address_text(value: Any) -> str:
+        text = str(value or "").strip()
+        if not text:
+            return ""
+        cleaned = re.sub(r"^\s*\d{6}\s*", "", text)
+        cleaned = re.sub(r"\s{2,}", " ", cleaned).strip(" ·|:：,，;/\\-?？")
+        return cleaned or text
+
+    @staticmethod
+    def _humanize_lodging_type(type_text: str, name: str = "") -> str:
+        raw = str(type_text or "").strip()
+        if raw:
+            tokens = [part.strip() for part in re.split(r"[;|/]", raw) if part.strip()]
+            for token in tokens:
+                if token.isdigit():
+                    continue
+                if any(ch.isalpha() for ch in token) or any("\u4e00" <= ch <= "\u9fff" for ch in token):
+                    return token
+        name_text = str(name or "")
+        if "民宿" in name_text:
+            return "民宿"
+        if any(token in name_text for token in ("客栈", "旅舍")):
+            return "客栈"
+        return "酒店"
 
     def _search_lodgings_by_zone(
         self,
@@ -972,7 +1046,7 @@ class LocalServiceTools:
     def _enrich_row(self, row: dict[str, Any], destination: str) -> dict[str, Any]:
         current = dict(row)
         current["location"] = str(current.get("location") or "").strip()
-        current["address"] = str(current.get("address") or "").strip()
+        current["address"] = self._clean_address_text(current.get("address"))
         current["cityname"] = str(current.get("cityname") or destination).strip()
         current["pname"] = str(current.get("pname") or "").strip()
         current["adname"] = str(current.get("adname") or "").strip()
@@ -1058,7 +1132,7 @@ class LocalServiceTools:
                     "name": name,
                     "type": self._humanize_food_type(type_text, name),
                     "type_code": type_text,
-                    "address": str(current.get("address", "")),
+                    "address": self._clean_address_text(current.get("address", "")),
                     "location": str(current.get("location", "")),
                     "rating": str((current.get("biz_ext") or {}).get("rating", "")),
                     "avg_cost": str((current.get("biz_ext") or {}).get("cost", "")),
@@ -1098,8 +1172,8 @@ class LocalServiceTools:
             hotels.append(
                 {
                     "name": name,
-                    "type": type_text,
-                    "address": str(current.get("address", "")),
+                    "type": self._humanize_lodging_type(type_text, name),
+                    "address": self._clean_address_text(current.get("address", "")),
                     "location": str(current.get("location", "")),
                     "rating": str((current.get("biz_ext") or {}).get("rating", "")),
                     "city": str(current.get("cityname", "")),

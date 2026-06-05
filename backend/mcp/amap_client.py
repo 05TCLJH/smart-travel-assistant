@@ -126,7 +126,10 @@ class AmapMcpClient:
         return self._call("maps_text_search", payload)
 
     def around_search(self, keywords: str, location: str, radius: int = 3000, types: str = "") -> dict[str, Any]:
-        return self._call("maps_around_search", {"keywords": keywords, "location": location, "radius": str(radius)})
+        payload: dict[str, Any] = {"keywords": keywords, "location": location, "radius": str(radius)}
+        if types:
+            payload["types"] = types
+        return self._call("maps_around_search", payload)
 
     def search_detail(self, poi_id: str) -> dict[str, Any]:
         return self._call("maps_search_detail", {"id": poi_id})

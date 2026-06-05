@@ -84,6 +84,21 @@ function shortKeyLabel(label) {
     return text || 'Key';
 }
 
+function hasValidSessionRuntimeKey(specId) {
+    const state = RuntimeSessionKeys?.getState?.() || {};
+    const rawValue = String(state?.[specId] || '').trim();
+    if (!rawValue) return false;
+    return !!RuntimeKeyValidator?.validate?.(specId, rawValue)?.valid;
+}
+
+function resolveEffectiveCapabilities(status = null) {
+    return {
+        amapLive: Boolean(status?.trip_live_enabled) || hasValidSessionRuntimeKey('amap_api_key'),
+        visionLive: Boolean(status?.vision_enabled) || hasValidSessionRuntimeKey('bailian_api_key'),
+        reportEnabled: Boolean(status?.report_enabled),
+    };
+}
+
 function describeValidationErrors(errors) {
     const entries = Object.entries(errors || {});
     if (!entries.length) return '';
@@ -538,7 +553,8 @@ async function handleRecognize() {
         return;
     }
     const systemStatus = getSystemStatus();
-    if (systemStatus && !systemStatus.vision_enabled) {
+    const capabilities = resolveEffectiveCapabilities(systemStatus);
+    if (systemStatus && !capabilities.visionLive) {
         notifyServiceFailure('Bailian/Qwen Key 未配置，景点识别暂不可用', { context: 'vision' });
         return;
     }
@@ -1122,6 +1138,7 @@ function updateSystemUI(status) {
     const desc = document.getElementById('system-status-desc');
     const pills = document.getElementById('stage-capability-pills');
     const sessionState = RuntimeSessionKeys?.getState?.() || {};
+    const capabilities = resolveEffectiveCapabilities(status);
     const modeText = sessionState.has_any ? '本次会话已配置' : (status.app_mode === 'hybrid' ? '混合模式' : '体验模式');
     if (badge) badge.dataset.mode = sessionState.has_any ? 'byok' : (status.app_mode || 'demo');
     if (title) title.textContent = modeText;
@@ -1134,9 +1151,9 @@ function updateSystemUI(status) {
     RuntimeConfigController.renderHints(status.runtime_config || {});
     renderSystemServiceAlerts();
     if (pills) pills.innerHTML = [
-        { label: (status.trip_live_enabled || sessionState.has_amap) ? '实时地图' : '演示地图', live: !!(status.trip_live_enabled || sessionState.has_amap) },
-        { label: (status.vision_enabled || sessionState.has_bailian) ? '景点识别可用' : '景点识别不可用', live: !!(status.vision_enabled || sessionState.has_bailian) },
-        { label: status.report_enabled ? 'PDF 可导出' : 'PDF 未启用', live: !!status.report_enabled },
+        { label: capabilities.amapLive ? '实时地图' : '演示地图', live: capabilities.amapLive },
+        { label: capabilities.visionLive ? '景点识别可用' : '景点识别不可用', live: capabilities.visionLive },
+        { label: capabilities.reportEnabled ? 'PDF 可导出' : 'PDF 未启用', live: capabilities.reportEnabled },
     ].map((item) => `<span class="capability-pill ${item.live ? 'is-live' : 'is-demo'}">${escapeHtml(item.label)}</span>`).join('');
 }
 

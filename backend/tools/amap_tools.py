@@ -97,10 +97,43 @@ class TravelResearchTools:
     def build_weather(self, destination: str, dates: list[str]) -> dict[str, Any]:
         if not (self.mcp_enabled and self.amap.enabled):
             return self._fallback_weather(destination, dates, "当前为体验模式或未配置高德 MCP")
+
+        resolved_name = destination
+        geo: dict[str, Any] = {}
+        weather_targets: list[str] = []
         try:
-            weather_payload = self.amap.weather(destination, "all")
-        except Exception as exc:
-            return self._fallback_weather(destination, dates, str(exc))
+            geo_payload = self.amap.geocode(resolve_geocode_query(destination))
+            resolved_name = self._extract_geocode_name(geo_payload, destination)
+            location = self._extract_geocode_location(geo_payload)
+            if location:
+                lng, lat = location.split(",") if "," in location else ("0", "0")
+                geo = {
+                    "lng": safe_float(lng, 0.0),
+                    "lat": safe_float(lat, 0.0),
+                }
+            for candidate in (
+                self._extract_geocode_adcode(geo_payload),
+                self._extract_destination_scope(geo_payload, destination).get("city", ""),
+                resolved_name,
+                destination,
+            ):
+                value = str(candidate or "").strip()
+                if value and value not in weather_targets:
+                    weather_targets.append(value)
+        except Exception:
+            weather_targets.append(destination)
+
+        weather_payload: dict[str, Any] | None = None
+        last_error = ""
+        for target in weather_targets or [destination]:
+            try:
+                weather_payload = self.amap.weather(target, "all")
+                break
+            except Exception as exc:
+                last_error = str(exc)
+
+        if weather_payload is None:
+            return self._fallback_weather(destination, dates, last_error or "高德 MCP 天气服务不可用")
 
         daily_rows = self._normalize_weather_payload(destination, dates, weather_payload)
         if not daily_rows:
@@ -118,8 +151,8 @@ class TravelResearchTools:
         live_payload = live_rows[0] if live_rows and isinstance(live_rows[0], dict) else {}
         return {
             "destination": destination,
-            "resolved_name": str(live_payload.get("city", "")).strip() or destination,
-            "geo": {},
+            "resolved_name": str(live_payload.get("city", "")).strip() or resolved_name,
+            "geo": geo,
             "rating": rating,
             "live": {
                 "city": live_payload.get("city", ""),

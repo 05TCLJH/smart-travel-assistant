@@ -59,6 +59,35 @@ def supervisor_next_step(state: TripGraphState) -> str:
     return str((state.get("review_feedback") or {}).get("next_step") or "finalize")
 
 
+def _final_map_data(state: TripGraphState) -> dict:
+    map_data = dict(state.get("map_data", {}) or {})
+    candidate_pois = [dict(item) for item in (state.get("candidate_pois", []) or []) if isinstance(item, dict)]
+    if candidate_pois:
+        map_data["pois"] = candidate_pois
+        if any(str(item.get("source", "")).strip() == "amap_mcp_poi_search" for item in candidate_pois):
+            map_data["is_fallback"] = False
+            if str(map_data.get("provider", "")).strip() in {"", "demo-local-dataset"}:
+                map_data["provider"] = "amap-mcp"
+            map_data["warning"] = ""
+        return map_data
+
+    itinerary = list((state.get("plan") or {}).get("itinerary", []) or [])
+    day_points: list[dict] = []
+    seen_names: set[str] = set()
+    for day in itinerary:
+        for point in list(day.get("route_waypoints", []) or []):
+            if not isinstance(point, dict):
+                continue
+            name = str(point.get("name", "")).strip()
+            if not name or name in seen_names:
+                continue
+            seen_names.add(name)
+            day_points.append(dict(point))
+    if day_points:
+        map_data["pois"] = day_points
+    return map_data
+
+
 def compose_final_result(state: TripGraphState, runtime) -> dict:
     runtime.emit_progress(
         "Supervisor Agent：正在整理最终结果...",
@@ -73,7 +102,7 @@ def compose_final_result(state: TripGraphState, runtime) -> dict:
         "trip_request": state["trip_request"],
         "dates": state["dates"],
         "weather": state.get("weather", {}) or {},
-        "map_data": state.get("map_data", {}) or {},
+        "map_data": _final_map_data(state),
         "food_recommendations": state.get("food_recommendations", []) or [],
         "lodging_recommendations": state.get("lodging_recommendations", []) or [],
         "transport_plan": state.get("transport_plan", {}) or {},
