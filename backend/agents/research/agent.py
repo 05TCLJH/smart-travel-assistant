@@ -5,6 +5,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 
 from backend.agents.summary_text import summarize_research_observation
+from backend.core.thread_context import submit_with_context
 from backend.schemas.graph_state import TripGraphState
 from backend.tools.grounding_tools import guard_candidate_pois
 
@@ -27,8 +28,8 @@ def run_research_agent(state: TripGraphState, runtime) -> dict:
         return runtime.research_tools.build_map_data(dest, persona, emit_step=runtime.emit_step)
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        fut_weather = executor.submit(fetch_weather)
-        fut_map = executor.submit(fetch_map)
+        fut_weather = submit_with_context(executor, fetch_weather)
+        fut_map = submit_with_context(executor, fetch_map)
         weather = fut_weather.result()
         map_data = fut_map.result()
     runtime.check_cancelled()

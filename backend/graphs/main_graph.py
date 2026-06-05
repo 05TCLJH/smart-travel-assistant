@@ -12,6 +12,7 @@ from backend.agents.food.agent import run_food_agent
 from backend.agents.intent.agent import run_intent_agent
 from backend.agents.supervisor.agent import compose_final_result, decide_supervisor_route, supervisor_next_step
 from backend.agents.transport.agent import run_transport_lodging_agent
+from backend.core.thread_context import submit_with_context
 from backend.graphs.subgraphs.planner_graph import build_planner_subgraph
 from backend.graphs.subgraphs.research_graph import build_research_subgraph
 from backend.schemas.graph_state import TripGraphState
@@ -45,8 +46,8 @@ def build_trip_graph(runtime):
             return run_food_agent(deepcopy(snap), runtime)
 
         with ThreadPoolExecutor(max_workers=2) as executor:
-            research_future = executor.submit(run_research)
-            food_future = executor.submit(run_food)
+            research_future = submit_with_context(executor, run_research)
+            food_future = submit_with_context(executor, run_food)
             research_updates = research_future.result()
             food_updates = food_future.result()
 

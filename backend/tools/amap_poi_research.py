@@ -8,6 +8,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
+from backend.core.thread_context import submit_with_context
 from backend.planning.poi_retrieval.classifiers import is_usable_raw_poi
 from backend.planning.poi_retrieval.policy import PoiRetrievalPolicy
 from backend.planning.poi_retrieval.priority import destination_priority_score
@@ -92,7 +93,7 @@ class AmapPoiResearchSupport:
 
         enriched: list[dict[str, Any]] = []
         with ThreadPoolExecutor(max_workers=3) as executor:
-            futures = {executor.submit(_enrich_one, row): idx for idx, row in enumerate(source_rows)}
+            futures = {submit_with_context(executor, _enrich_one, row): idx for idx, row in enumerate(source_rows)}
             results: dict[int, dict[str, Any]] = {}
             for future in as_completed(futures):
                 idx = futures[future]

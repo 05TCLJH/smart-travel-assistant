@@ -76,7 +76,7 @@
     }
 
     .stage-body {
-        --stage-body-pad-x: 28px;
+        --stage-body-pad-x: var(--space-6);
         padding: var(--space-6);
     }
 
@@ -169,6 +169,7 @@
     .sidebar-card,
     .stage-body,
     .result-accordion__body {
+        --stage-body-pad-x: var(--space-4);
         padding: var(--space-4);
     }
 

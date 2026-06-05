@@ -1350,11 +1350,12 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .stage-body {
-    --stage-body-pad-x: 34px;
+    --stage-body-pad-x: var(--space-7);
     padding: var(--space-7);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 252, 250, 0.88));
     box-shadow: var(--shadow-sm);
+    overflow-x: hidden;
 }
 
 .empty-stage {
@@ -1432,6 +1433,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 .stage-sections {
     gap: var(--space-5);
+    min-width: 0;
+    max-width: 100%;
 }
 
 .stage-section {
@@ -1440,6 +1443,8 @@ input[type="range"]::-webkit-slider-thumb {
     border: none;
     background: transparent;
     transition: none;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .stage-section:hover {
@@ -1468,6 +1473,8 @@ input[type="range"]::-webkit-slider-thumb {
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
     box-shadow: var(--shadow-sm);
+    min-width: 0;
+    max-width: 100%;
     transition:
         border-color var(--motion-base),
         box-shadow var(--motion-base),
@@ -1501,6 +1508,9 @@ input[type="range"]::-webkit-slider-thumb {
 .result-accordion__body {
     padding: var(--space-5) var(--space-6) var(--space-6);
     border-top-color: var(--color-border);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .result-accordion__body > .stage-section {
