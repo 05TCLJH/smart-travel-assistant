@@ -1,9 +1,9 @@
-"""Shared runtime state storage backed by SQLite.
+"""基于 SQLite 的共享运行时状态存储。
 
-This store intentionally keeps runtime data lightweight and short lived:
-- trip task queue state and results
-- travel context snapshots
-- short-lived static map tickets
+该存储有意保持轻量且短生命周期：
+- 任务队列状态与结果
+- 旅行上下文快照
+- 短期静态地图票据
 """
 
 from __future__ import annotations

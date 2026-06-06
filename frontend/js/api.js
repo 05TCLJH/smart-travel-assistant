@@ -1,4 +1,4 @@
-// Frontend API client with credential-aware fetch and SSE helpers.
+// 前端 API 客户端，包含带凭据的 fetch 和 SSE 辅助能力。
 
 function resolveApiBaseUrl() {
     const configured = String(window.__SMART_TRAVEL_CONFIG?.apiBaseUrl || '').trim();

@@ -1,4 +1,4 @@
-"""Helpers for preserving request-scoped context across worker threads."""
+"""在工作线程间保留请求级上下文的辅助函数。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Internal travel context MCP service."""
+"""内部旅行上下文 MCP 服务。"""
 
 from __future__ import annotations
 

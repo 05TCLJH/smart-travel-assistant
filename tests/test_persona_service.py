@@ -1,4 +1,4 @@
-"""Persona service contract tests."""
+"""Persona 服务契约测试。"""
 
 from __future__ import annotations
 

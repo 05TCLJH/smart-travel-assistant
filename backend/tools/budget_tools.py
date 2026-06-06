@@ -232,7 +232,7 @@ def _build_hotel_tip(
 
 
 def _estimate_ticket_line(point: dict[str, Any], companions: int, destination: str = "") -> dict[str, Any]:
-    """Build an estimate-only ticket line for one stop."""
+    """为单个停靠点构建仅估算票价的条目。"""
     companions = max(1, companions)
     point_type = str(point.get("type", ""))
     name = str(point.get("name", ""))

@@ -4,6 +4,5 @@ from langgraph.checkpoint.memory import MemorySaver
 
 
 def get_checkpointer() -> MemorySaver:
-    # Keep checkpoints scoped to the current execution chain so different users
-    # do not share a global in-process saver.
+    # 将检查点限定在当前执行链路内，避免不同用户共享同一个进程内 Saver。
     return MemorySaver()

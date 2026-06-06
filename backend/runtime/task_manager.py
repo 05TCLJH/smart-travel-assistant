@@ -1,4 +1,4 @@
-"""Deploy-safe task manager backed by shared runtime storage."""
+"""基于共享运行时存储的部署安全任务管理器。"""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ class TaskSnapshot:
 
 
 class TaskCancellationHandle:
-    """Cancellation view that works across workers by reading shared storage."""
+    """跨 worker 通过共享存储读取的取消视图。"""
 
     def __init__(self, task_id: str) -> None:
         self._task_id = task_id
@@ -36,7 +36,7 @@ class TaskCancellationHandle:
 
 
 class TripTaskManager:
-    """Coordinate queue-backed task execution, polling SSE, and restart recovery."""
+    """协调基于队列的任务执行、SSE 轮询与重启恢复。"""
 
     def __init__(self) -> None:
         runtime_state_store.initialize()

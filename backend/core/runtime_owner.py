@@ -1,8 +1,6 @@
-"""Anonymous runtime owner isolation helpers.
+"""匿名运行时 owner 隔离辅助函数。
 
-We do not require a full login system for this project, but we still need a
-stable per-browser boundary so tasks, travel sessions, and map tickets are not
-shared across users.
+本项目不需要完整登录系统，但仍需要稳定的浏览器级边界，确保任务、旅行会话和地图票据不会在不同用户之间共享。
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Top-level trip planning graph."""
+"""旅行规划的顶层图编排。"""
 
 from __future__ import annotations
 

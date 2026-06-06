@@ -1,4 +1,4 @@
-"""Shared travel context storage built on the runtime SQLite store."""
+"""基于运行时 SQLite 存储的共享旅行上下文存储。"""
 
 from __future__ import annotations
 

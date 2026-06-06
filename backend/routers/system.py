@@ -1,4 +1,4 @@
-"""System status and runtime configuration endpoints."""
+"""系统状态与运行时配置接口。"""
 
 from __future__ import annotations
 

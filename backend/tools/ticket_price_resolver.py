@@ -1,4 +1,4 @@
-"""Ticket price helpers for estimate-only budgeting."""
+"""预算估算模式下的票价辅助函数。"""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from typing import Any
 
 
 def parse_ticket_price(raw: Any) -> float | None:
-    """Only treats explicit free-admission markers as a resolved price."""
+    """只把明确的免票标记视为已解析价格。"""
     text = str(raw or "").strip()
     if not text:
         return None
@@ -16,12 +16,12 @@ def parse_ticket_price(raw: Any) -> float | None:
 
 
 def match_official_ticket_source(place: str, destination: str = "") -> dict[str, Any] | None:
-    """Official ticket matching is disabled in the estimate-only flow."""
+    """仅估算流程中不再做正式票务匹配。"""
     return None
 
 
 def resolve_ticket_price_source(point: dict[str, Any], destination: str = "") -> dict[str, Any]:
-    """Always returns estimate metadata after rolling back live verification."""
+    """回退实时校验后，始终返回估算元数据。"""
     return {
         "price": None,
         "source_type": "estimated",
@@ -34,7 +34,7 @@ def resolve_ticket_price_source(point: dict[str, Any], destination: str = "") ->
 
 
 def attach_ticket_reference(poi: dict[str, Any], destination: str = "") -> dict[str, Any]:
-    """Attach estimate-only ticket metadata to a POI."""
+    """为 POI 附加仅估算的票务元数据。"""
     enriched = dict(poi)
     ticket_source = resolve_ticket_price_source(enriched, destination)
     enriched["ticket_source_type"] = ticket_source["source_type"]

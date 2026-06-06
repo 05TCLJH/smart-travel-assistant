@@ -1,4 +1,4 @@
-"""Background runner for queue-backed trip generation tasks."""
+"""面向队列任务的后台运行器。"""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def build_travel_service() -> TravelService:
 
 
 class TripTaskRunner:
-    """Claim queued tasks from shared storage and execute them in the background."""
+    """从共享存储中领取队列任务，并在后台执行。"""
 
     def __init__(self, *, runner_id: str | None = None) -> None:
         self._runner_id = runner_id or uuid.uuid4().hex

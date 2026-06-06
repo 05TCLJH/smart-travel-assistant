@@ -1,4 +1,4 @@
-"""Trip planning routes and static map preview helpers."""
+"""旅行规划路由与静态地图预览辅助函数。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Service factories for backend orchestration layers."""
+"""后端编排层的服务工厂。"""
 
 from __future__ import annotations
 
@@ -6,5 +6,5 @@ from backend.services.travel_service import TravelService
 
 
 def create_travel_service() -> TravelService:
-    """Build the shared travel planning service."""
+    """构建共享的旅行规划服务。"""
     return TravelService()

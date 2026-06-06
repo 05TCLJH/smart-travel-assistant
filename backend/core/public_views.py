@@ -1,4 +1,4 @@
-"""Public-facing payload sanitizers."""
+"""面向外部展示的数据清洗器。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""MCP prompt builders for grounded travel planning."""
+"""面向落地旅行规划的 MCP 提示词构造器。"""
 
 from __future__ import annotations
 

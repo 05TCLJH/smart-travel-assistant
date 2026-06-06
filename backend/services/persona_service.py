@@ -1,4 +1,4 @@
-"""用户画像的公开视图与规划视图分离。"""
+﻿"""用户画像的公开视图与规划视图分离。"""
 
 from __future__ import annotations
 
@@ -96,7 +96,7 @@ class PersonaService:
         return internal
 
     def _normalize(self, data: dict[str, Any]) -> dict[str, Any]:
-        """Compatibility helper for older internal tests and callers."""
+        """兼容旧的内部测试和调用方。"""
         return self.enrich(data, {"destination": "", "days": 3, "budget": 3000})
 
     @staticmethod

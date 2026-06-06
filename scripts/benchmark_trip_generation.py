@@ -1,4 +1,4 @@
-"""Run timed trip-generation benchmarks and save a structured report."""
+"""运行行程生成计时基准，并保存结构化报告。"""
 
 from __future__ import annotations
 

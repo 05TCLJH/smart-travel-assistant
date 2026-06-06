@@ -1,4 +1,4 @@
-"""Project path helpers."""
+"""项目路径辅助函数。"""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ def runtime_data_root() -> Path:
     configured = str(os.getenv("EPHEMERAL_RUNTIME_ROOT", "")).strip()
     if configured:
         return Path(configured).expanduser()
-    # Hugging Face Spaces runs well with an explicitly ephemeral runtime area.
+    # Hugging Face Spaces 适合使用显式的临时运行时目录。
     if str(os.getenv("SPACE_ID", "")).strip():
         return Path(tempfile.gettempdir()) / "smart-travel-assistant"
     return DATA_DIR
@@ -29,7 +29,7 @@ REPORTS_DIR = RUNTIME_DATA_ROOT / "reports"
 
 
 def ensure_runtime_dirs() -> None:
-    """Ensure runtime directories exist."""
+    """确保运行时目录存在。"""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     RUNTIME_DATA_ROOT.mkdir(parents=True, exist_ok=True)
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)

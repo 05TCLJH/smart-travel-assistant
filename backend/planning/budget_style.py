@@ -1,4 +1,4 @@
-"""Shared helpers for canonical budget-style handling."""
+"""标准预算风格处理的共享辅助函数。"""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ _LODGING_FALLBACK_TYPES: dict[str, tuple[str, str, str]] = {
 
 
 def normalize_budget_style(value: str | None, default: str = "舒适") -> str:
-    """Normalize budget-style aliases to one canonical label."""
+    """将预算风格别名规范化为一个统一标签。"""
     text = str(value or "").strip()
     if not text:
         return default
@@ -60,24 +60,24 @@ def normalize_budget_style(value: str | None, default: str = "舒适") -> str:
 
 
 def budget_style_factor(value: str | None, default: str = "舒适") -> float:
-    """Return the cost multiplier for the normalized budget style."""
+    """返回规范化预算风格对应的成本倍率。"""
     style = normalize_budget_style(value, default=default)
     return _BUDGET_STYLE_FACTORS.get(style, _BUDGET_STYLE_FACTORS[default])
 
 
 def ticket_warning_threshold(value: str | None, default: str = "舒适") -> float:
-    """Return the ticket-price warning threshold for the budget style."""
+    """返回预算风格对应的门票提醒阈值。"""
     style = normalize_budget_style(value, default=default)
     return _TICKET_WARNING_THRESHOLDS.get(style, _TICKET_WARNING_THRESHOLDS[default])
 
 
 def lodging_search_keywords(value: str | None, default: str = "舒适") -> tuple[str, ...]:
-    """Return preferred hotel-search keywords for the budget style."""
+    """返回该预算风格偏好的酒店搜索关键词。"""
     style = normalize_budget_style(value, default=default)
     return _LODGING_SEARCH_KEYWORDS.get(style, _LODGING_SEARCH_KEYWORDS[default])
 
 
 def lodging_fallback_types(value: str | None, default: str = "舒适") -> tuple[str, str, str]:
-    """Return fallback hotel type labels for the budget style."""
+    """返回该预算风格的酒店兜底类型标签。"""
     style = normalize_budget_style(value, default=default)
     return _LODGING_FALLBACK_TYPES.get(style, _LODGING_FALLBACK_TYPES[default])
