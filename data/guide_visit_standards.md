@@ -43,11 +43,7 @@ venue_schedule_policy.py（闭馆/停止入馆/排队/观景公园靠后）→ d
 | 单个景点精确时长 | `data/curated_visit_profiles.json` |
 | 某城市搜哪些点 | `destination_knowledge.json` 的 `hotspots` |
 
-**不要**再往 JSON 里写 `visit_profiles`。若旧文件里还有，执行：
-
-```bash
-python scripts/strip_visit_profiles_from_knowledge.py
-```
+**不要**再往 JSON 里写 `visit_profiles`（旧字段已清理完毕）。
 
 ## 档位参考
 
