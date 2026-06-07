@@ -22,8 +22,6 @@ COPY data/curated_visit_profiles.json data/curated_visit_profiles.json
 COPY data/demo_pois.json data/demo_pois.json
 COPY data/destination_knowledge.json data/destination_knowledge.json
 COPY data/guide_visit_standards.md data/guide_visit_standards.md
-COPY data/tengwang_candidates.png data/tengwang_candidates.png
-COPY data/tengwang_west_candidates.png data/tengwang_west_candidates.png
 
 RUN mkdir -p /app/data/runtime /app/data/reports \
     && touch /app/.env \
